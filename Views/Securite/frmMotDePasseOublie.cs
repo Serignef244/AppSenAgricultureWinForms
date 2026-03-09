@@ -61,6 +61,8 @@ namespace AppSenAgriculture.Views.Securite
                     // Envoyer l'email
                     EmailService.SendTemporaryPassword(email, tempPwd);
 
+                    Logger.LogInfo($"Mot de passe temporaire envoyé avec succès à {email}.", "frmMotDePasseOublie");
+
                     MessageBox.Show("Un nouveau mot de passe a été envoyé à votre adresse email.", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
