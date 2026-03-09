@@ -28,15 +28,22 @@ namespace AppSenAgriculture.Views.Parametre
         }
         private void frmCategorie_Load(object sender, EventArgs e)
         {
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
-            }
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
 
-            db = new BdSenAgricultureContext();
-            _isLoaded = true;
-            //on le recupere avec ORM
-            effacerChamps();
+                db = new BdSenAgricultureContext();
+                _isLoaded = true;
+                //on le recupere avec ORM
+                effacerChamps();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmCategorie.Load");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -92,75 +99,98 @@ namespace AppSenAgriculture.Views.Parametre
         /// <param name="e"></param>
         private void btnAjouter_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtLibelle.Text))
+            try
             {
-                MessageBox.Show("Le libelle est obligatoire.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtLibelle.Focus();
-                return;
+                if (string.IsNullOrWhiteSpace(txtLibelle.Text))
+                {
+                    MessageBox.Show("Le libelle est obligatoire.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtLibelle.Focus();
+                    return;
+                }
+
+                Categorie cat = new Categorie()
+                {
+                    Libelle = txtLibelle.Text.Trim(),
+                    DescriptionCategorie = txtDescription.Text.Trim(),
+
+                };
+                //permet d'ajouter dans le cache db
+                db.Categories.Add(cat);
+                db.SaveChanges();
+                effacerChamps();
+                MessageBox.Show("Categorie ajoutée avec succès.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            Categorie cat = new Categorie()
+            catch (Exception ex)
             {
-                Libelle = txtLibelle.Text.Trim(),
-                DescriptionCategorie = txtDescription.Text.Trim(),
-
-            };
-            //permet d'ajouter dans le cache db
-            db.Categories.Add(cat);
-            db.SaveChanges();
-            effacerChamps();
+                Logger.WriteLog(ex, "frmCategorie.btnAjouter_Click");
+            }
         }
 
         private void btnModifier_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez une categorie.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez une categorie.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtLibelle.Text))
+                {
+                    MessageBox.Show("Le libelle est obligatoire.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtLibelle.Focus();
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgCategorie.CurrentRow.Cells[0].Value);
+
+                Categorie cat = db.Categories.Find(id);
+
+                if (cat != null)
+                {
+                    cat.Libelle = txtLibelle.Text.Trim();
+                    cat.DescriptionCategorie = txtDescription.Text.Trim();
+                    db.SaveChanges();
+                    effacerChamps();
+                    MessageBox.Show("Categorie modifiée avec succès.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
-
-            if (string.IsNullOrWhiteSpace(txtLibelle.Text))
+            catch (Exception ex)
             {
-                MessageBox.Show("Le libelle est obligatoire.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtLibelle.Focus();
-                return;
-            }
-
-            int id = Convert.ToInt32(dgCategorie.CurrentRow.Cells[0].Value);
-
-            Categorie cat = db.Categories.Find(id);
-
-            if (cat != null)
-            {
-                cat.Libelle = txtLibelle.Text.Trim();
-                cat.DescriptionCategorie = txtDescription.Text.Trim();
-                db.SaveChanges();
-                effacerChamps();
+                Logger.WriteLog(ex, "frmCategorie.btnModifier_Click");
             }
         }
 
         private void btnSupprimer_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez une categorie.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez une categorie.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (MessageBox.Show("Voulez-vous supprimer cette categorie ?", "Categorie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("Voulez-vous supprimer cette categorie ?", "Categorie", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgCategorie.CurrentRow.Cells[0].Value);
+                Categorie cat = db.Categories.Find(id);
+                if (cat != null)
+                {
+                    db.Categories.Remove(cat);
+                    db.SaveChanges();
+                    effacerChamps();
+                    MessageBox.Show("Categorie supprimée avec succès.", "Categorie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmCategorie.btnSupprimer_Click");
             }
-
-            int id = Convert.ToInt32(dgCategorie.CurrentRow.Cells[0].Value);
-            Categorie cat = db.Categories.Find(id);
-            if (cat != null)
-            {
-                db.Categories.Remove(cat);
-                db.SaveChanges();
-                effacerChamps();
-            }
-
         }
 
         private void btnSelection_Click(object sender, EventArgs e)

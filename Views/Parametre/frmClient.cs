@@ -17,14 +17,21 @@ namespace AppSenAgriculture.Views.Parametre
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
+                base.OnLoad(e);
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
+                db = new BdSenAgricultureContext();
+                ChargerClients();
+                ReinitialiserFormulaire();
             }
-            db = new BdSenAgricultureContext();
-            ChargerClients();
-            ReinitialiserFormulaire();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmClient.OnLoad");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -134,125 +141,148 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void btnAjouter_Click(object sender, EventArgs e)
         {
-            if (!FormulaireValide())
+            try
             {
-                return;
+                if (!FormulaireValide())
+                {
+                    return;
+                }
+
+                string identifiant = txtIdentifiant.Text.Trim();
+                if (!IdentifiantDisponible(identifiant, null))
+                {
+                    MessageBox.Show("Cet identifiant existe deja. Choisissez-en un autre.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtIdentifiant.Focus();
+                    return;
+                }
+
+                string motDePasseTemporaire = "passer";
+
+                string passwordHash = PasswordSecurity.HashPassword(motDePasseTemporaire);
+
+                db.Clients.Add(new Client
+                {
+                    NomCompletPersonne = txtNom.Text.Trim(),
+                    AddressePersonne = txtAdresse.Text.Trim(),
+                    EmailPersonne = txtEmail.Text.Trim(),
+                    TelPersonne = txtTelephone.Text.Trim(),
+                    IdentifiantPersonne = identifiant,
+                    MotDePassePersonne = passwordHash,
+                    MotDePasseHash = passwordHash,
+                    DoitChangerMotDePasse = true,
+                    ProfessionClient = txtProfession.Text.Trim(),
+                });
+                db.SaveChanges();
+
+                ChargerClients();
+                ReinitialiserFormulaire();
+                MessageBox.Show(
+                    "Client cree avec succes.\nMot de passe temporaire: " + motDePasseTemporaire
+                    + "\nLe client devra le changer a la premiere connexion.",
+                    "Client",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
             }
-
-            string identifiant = txtIdentifiant.Text.Trim();
-            if (!IdentifiantDisponible(identifiant, null))
+            catch (Exception ex)
             {
-                MessageBox.Show("Cet identifiant existe deja. Choisissez-en un autre.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtIdentifiant.Focus();
-                return;
+                Logger.WriteLog(ex, "frmClient.btnAjouter_Click");
             }
-
-            string motDePasseTemporaire = "passer";
-
-            string passwordHash = PasswordSecurity.HashPassword(motDePasseTemporaire);
-
-            db.Clients.Add(new Client
-            {
-                NomCompletPersonne = txtNom.Text.Trim(),
-                AddressePersonne = txtAdresse.Text.Trim(),
-                EmailPersonne = txtEmail.Text.Trim(),
-                TelPersonne = txtTelephone.Text.Trim(),
-                IdentifiantPersonne = identifiant,
-                MotDePassePersonne = passwordHash,
-                MotDePasseHash = passwordHash,
-                DoitChangerMotDePasse = true,
-                ProfessionClient = txtProfession.Text.Trim(),
-            });
-            db.SaveChanges();
-
-            ChargerClients();
-            ReinitialiserFormulaire();
-            MessageBox.Show(
-                "Client cree avec succes.\nMot de passe temporaire: " + motDePasseTemporaire
-                + "\nLe client devra le changer a la premiere connexion.",
-                "Client",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
         }
 
         private void btnModifier_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez un client.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez un client.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (!FormulaireValide())
+                if (!FormulaireValide())
+                {
+                    return;
+                }
+
+                int id = GetClientSelectionne();
+                var client = db.Clients.Find(id);
+                if (client == null)
+                {
+                    MessageBox.Show("Client introuvable.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string identifiant = txtIdentifiant.Text.Trim();
+                if (!IdentifiantDisponible(identifiant, id))
+                {
+                    MessageBox.Show("Cet identifiant existe deja. Choisissez-en un autre.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtIdentifiant.Focus();
+                    return;
+                }
+
+                client.NomCompletPersonne = txtNom.Text.Trim();
+                client.AddressePersonne = txtAdresse.Text.Trim();
+                client.EmailPersonne = txtEmail.Text.Trim();
+                client.TelPersonne = txtTelephone.Text.Trim();
+                client.IdentifiantPersonne = identifiant;
+                client.ProfessionClient = txtProfession.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(client.MotDePasseHash) && !string.IsNullOrWhiteSpace(client.MotDePassePersonne))
+                {
+                    client.MotDePasseHash = client.MotDePassePersonne;
+                }
+
+                db.SaveChanges();
+                ChargerClients();
+                ReinitialiserFormulaire();
+                MessageBox.Show("Client modifié avec succès.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmClient.btnModifier_Click");
             }
-
-            int id = GetClientSelectionne();
-            var client = db.Clients.Find(id);
-            if (client == null)
-            {
-                MessageBox.Show("Client introuvable.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            string identifiant = txtIdentifiant.Text.Trim();
-            if (!IdentifiantDisponible(identifiant, id))
-            {
-                MessageBox.Show("Cet identifiant existe deja. Choisissez-en un autre.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtIdentifiant.Focus();
-                return;
-            }
-
-            client.NomCompletPersonne = txtNom.Text.Trim();
-            client.AddressePersonne = txtAdresse.Text.Trim();
-            client.EmailPersonne = txtEmail.Text.Trim();
-            client.TelPersonne = txtTelephone.Text.Trim();
-            client.IdentifiantPersonne = identifiant;
-            client.ProfessionClient = txtProfession.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(client.MotDePasseHash) && !string.IsNullOrWhiteSpace(client.MotDePassePersonne))
-            {
-                client.MotDePasseHash = client.MotDePassePersonne;
-            }
-
-            db.SaveChanges();
-            ChargerClients();
-            ReinitialiserFormulaire();
         }
 
         private void btnSupprimer_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez un client.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez un client.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (MessageBox.Show("Voulez-vous supprimer ce client ?", "Client", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("Voulez-vous supprimer ce client ?", "Client", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                int id = GetClientSelectionne();
+                bool lieCommande = db.Commandes.Any(c => c.IdClient == id);
+                if (lieCommande)
+                {
+                    MessageBox.Show("Impossible de supprimer ce client: il est lie a des commandes.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var client = db.Clients.Find(id);
+                if (client == null)
+                {
+                    return;
+                }
+
+                db.Clients.Remove(client);
+                db.SaveChanges();
+                ChargerClients();
+                ReinitialiserFormulaire();
+                MessageBox.Show("Client supprimé avec succès.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmClient.btnSupprimer_Click");
             }
-
-            int id = GetClientSelectionne();
-            bool lieCommande = db.Commandes.Any(c => c.IdClient == id);
-            if (lieCommande)
-            {
-                MessageBox.Show("Impossible de supprimer ce client: il est lie a des commandes.", "Client", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var client = db.Clients.Find(id);
-            if (client == null)
-            {
-                return;
-            }
-
-            db.Clients.Remove(client);
-            db.SaveChanges();
-            ChargerClients();
-            ReinitialiserFormulaire();
         }
 
         private void btnSelectionner_Click(object sender, EventArgs e)
