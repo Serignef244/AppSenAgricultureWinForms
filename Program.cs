@@ -10,6 +10,11 @@ namespace AppSenAgriculture
         [STAThread]
         static void Main()
         {
+            // Set up global exception handling
+            Application.ThreadException += (sender, e) => Logger.WriteLog(e.Exception, "Global UI Thread");
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => Logger.WriteLog(e.ExceptionObject as Exception, "Global Non-UI Thread");
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
             try
             {
                 // Apply pending EF migrations at startup to ensure required tables exist.
@@ -22,12 +27,7 @@ namespace AppSenAgriculture
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Erreur au demarrage: " + ex.Message,
-                    "Demarrage",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                Logger.WriteLog(ex, "Program.Main");
             }
         }
     }

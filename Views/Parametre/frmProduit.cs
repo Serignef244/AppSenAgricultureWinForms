@@ -16,15 +16,22 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void frmProduit_Load(object sender, EventArgs e)
         {
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
-            }
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
 
-            db = new BdSenAgricultureContext();
-            ChargerReferences();
-            ChargerProduits();
-            ReinitialiserSaisie();
+                db = new BdSenAgricultureContext();
+                ChargerReferences();
+                ChargerProduits();
+                ReinitialiserSaisie();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmProduit.Load");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -190,85 +197,109 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void btnAjouter_Click(object sender, EventArgs e)
         {
-            if (!FormulaireValide())
+            try
             {
-                return;
+                if (!FormulaireValide())
+                {
+                    return;
+                }
+
+                var produit = new Produit
+                {
+                    LibelleProduit = txtLibelleProduit.Text.Trim(),
+                    DescriptionProduit = txtDescriptionProduit.Text.Trim(),
+                    PrixUnitaireMin = Convert.ToDouble(txtPrixMin.Text.Trim()),
+                    PrixUnitaireMax = Convert.ToDouble(txtPrixMax.Text.Trim()),
+                    CategorieId = Convert.ToInt32(cmbCategorie.SelectedValue),
+                    IdUniteMesure = Convert.ToInt32(cmbUnite.SelectedValue)
+                };
+
+                db.Produits.Add(produit);
+                db.SaveChanges();
+                ChargerProduits();
+                ReinitialiserSaisie();
+                MessageBox.Show("Produit ajouté avec succès.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            var produit = new Produit
+            catch (Exception ex)
             {
-                LibelleProduit = txtLibelleProduit.Text.Trim(),
-                DescriptionProduit = txtDescriptionProduit.Text.Trim(),
-                PrixUnitaireMin = Convert.ToDouble(txtPrixMin.Text.Trim()),
-                PrixUnitaireMax = Convert.ToDouble(txtPrixMax.Text.Trim()),
-                CategorieId = Convert.ToInt32(cmbCategorie.SelectedValue),
-                IdUniteMesure = Convert.ToInt32(cmbUnite.SelectedValue)
-            };
-
-            db.Produits.Add(produit);
-            db.SaveChanges();
-            ChargerProduits();
-            ReinitialiserSaisie();
+                Logger.WriteLog(ex, "frmProduit.btnAjouter_Click");
+            }
         }
 
         private void btnModifier_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez un produit.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez un produit.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (!FormulaireValide())
+                if (!FormulaireValide())
+                {
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgProduits.CurrentRow.Cells["IdProduit"].Value);
+                var produit = db.Produits.Find(id);
+                if (produit == null)
+                {
+                    MessageBox.Show("Produit introuvable.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                produit.LibelleProduit = txtLibelleProduit.Text.Trim();
+                produit.DescriptionProduit = txtDescriptionProduit.Text.Trim();
+                produit.PrixUnitaireMin = Convert.ToDouble(txtPrixMin.Text.Trim());
+                produit.PrixUnitaireMax = Convert.ToDouble(txtPrixMax.Text.Trim());
+                produit.CategorieId = Convert.ToInt32(cmbCategorie.SelectedValue);
+                produit.IdUniteMesure = Convert.ToInt32(cmbUnite.SelectedValue);
+
+                db.SaveChanges();
+                ChargerProduits();
+                ReinitialiserSaisie();
+                MessageBox.Show("Produit modifié avec succès.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmProduit.btnModifier_Click");
             }
-
-            int id = Convert.ToInt32(dgProduits.CurrentRow.Cells["IdProduit"].Value);
-            var produit = db.Produits.Find(id);
-            if (produit == null)
-            {
-                MessageBox.Show("Produit introuvable.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            produit.LibelleProduit = txtLibelleProduit.Text.Trim();
-            produit.DescriptionProduit = txtDescriptionProduit.Text.Trim();
-            produit.PrixUnitaireMin = Convert.ToDouble(txtPrixMin.Text.Trim());
-            produit.PrixUnitaireMax = Convert.ToDouble(txtPrixMax.Text.Trim());
-            produit.CategorieId = Convert.ToInt32(cmbCategorie.SelectedValue);
-            produit.IdUniteMesure = Convert.ToInt32(cmbUnite.SelectedValue);
-
-            db.SaveChanges();
-            ChargerProduits();
-            ReinitialiserSaisie();
         }
 
         private void btnSupprimer_Click(object sender, EventArgs e)
         {
-            if (!SelectionValide())
+            try
             {
-                MessageBox.Show("Selectionnez un produit.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionValide())
+                {
+                    MessageBox.Show("Selectionnez un produit.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (MessageBox.Show("Voulez-vous supprimer ce produit ?", "Produit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("Voulez-vous supprimer ce produit ?", "Produit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgProduits.CurrentRow.Cells["IdProduit"].Value);
+                var produit = db.Produits.Find(id);
+                if (produit == null)
+                {
+                    MessageBox.Show("Produit introuvable.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                db.Produits.Remove(produit);
+                db.SaveChanges();
+                ChargerProduits();
+                ReinitialiserSaisie();
+                MessageBox.Show("Produit supprimé avec succès.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmProduit.btnSupprimer_Click");
             }
-
-            int id = Convert.ToInt32(dgProduits.CurrentRow.Cells["IdProduit"].Value);
-            var produit = db.Produits.Find(id);
-            if (produit == null)
-            {
-                MessageBox.Show("Produit introuvable.", "Produit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            db.Produits.Remove(produit);
-            db.SaveChanges();
-            ChargerProduits();
-            ReinitialiserSaisie();
         }
 
         private void btnSelection_Click(object sender, EventArgs e)
