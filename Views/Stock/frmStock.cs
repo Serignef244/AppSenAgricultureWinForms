@@ -1,3 +1,4 @@
+using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
 using System.Linq;
@@ -17,16 +18,23 @@ namespace AppSenAgriculture.Views.Stock
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
+                base.OnLoad(e);
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
+                db = new BdSenAgricultureContext();
+                _isLoaded = true;
+                ChargerProduits();
+                ChargerStocks();
+                AfficherInfosProduit();
             }
-            db = new BdSenAgricultureContext();
-            _isLoaded = true;
-            ChargerProduits();
-            ChargerStocks();
-            AfficherInfosProduit();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmStock.OnLoad");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -150,42 +158,50 @@ namespace AppSenAgriculture.Views.Stock
 
         private void btnApprovisionner_Click(object sender, EventArgs e)
         {
-            int quantite;
-            if (!LireSaisie(out quantite))
+            try
             {
-                return;
-            }
-
-            int idProduit;
-            if (!TryGetSelectedProduitId(out idProduit))
-            {
-                MessageBox.Show("Selectionnez un produit.", "Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            AppSenAgriculture.Models.Stock stock = StockParProduit(idProduit);
-            if (stock == null)
-            {
-                stock = new AppSenAgriculture.Models.Stock
+                int quantite;
+                if (!LireSaisie(out quantite))
                 {
-                    IdProduit = idProduit,
-                    QuanteStock = 0,
-                    Date = DateTime.Now,
-                    DateDispo = DateTime.Now,
-                    DatePaiement = DateTime.Now,
-                    Pu = 0
-                };
-                db.Stocks.Add(stock);
+                    return;
+                }
+
+                int idProduit;
+                if (!TryGetSelectedProduitId(out idProduit))
+                {
+                    MessageBox.Show("Selectionnez un produit.", "Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                AppSenAgriculture.Models.Stock stock = StockParProduit(idProduit);
+                if (stock == null)
+                {
+                    stock = new AppSenAgriculture.Models.Stock
+                    {
+                        IdProduit = idProduit,
+                        QuanteStock = 0,
+                        Date = DateTime.Now,
+                        DateDispo = DateTime.Now,
+                        DatePaiement = DateTime.Now,
+                        Pu = 0
+                    };
+                    db.Stocks.Add(stock);
+                }
+
+                stock.QuanteStock += quantite;
+                stock.Date = DateTime.Now;
+                stock.DateDispo = DateTime.Now;
+                stock.DatePaiement = DateTime.Now;
+                db.SaveChanges();
+
+                txtQuantite.Clear();
+                ChargerStocks();
+                AfficherInfosProduit();
+                MessageBox.Show("Stock mis à jour avec succès.", "Stock", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            stock.QuanteStock += quantite;
-            stock.Date = DateTime.Now;
-            stock.DateDispo = DateTime.Now;
-            stock.DatePaiement = DateTime.Now;
-            db.SaveChanges();
-
-            txtQuantite.Clear();
-            ChargerStocks();
-            AfficherInfosProduit();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmStock.btnApprovisionner_Click");
+            }
         }
 
         private void cmbProduit_SelectedIndexChanged(object sender, EventArgs e)

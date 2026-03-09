@@ -1,7 +1,8 @@
+using AppSenAgriculture;
+using AppSenAgriculture.Models;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using AppSenAgriculture.Models;
 
 namespace AppSenAgriculture.Views.Parametre
 {
@@ -16,14 +17,21 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void frmLieu_Load(object sender, EventArgs e)
         {
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
-            }
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
 
-            db = new BdSenAgricultureContext();
-            ChargerRegions();
-            ChargerDepartements();
+                db = new BdSenAgricultureContext();
+                ChargerRegions();
+                ChargerDepartements();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmLieu.Load");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -72,102 +80,134 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void btnAjouterRegion_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNomRegion.Text))
+            try
             {
-                MessageBox.Show("Le nom de la region est obligatoire.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNomRegion.Focus();
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(txtNomRegion.Text))
+                {
+                    MessageBox.Show("Le nom de la region est obligatoire.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNomRegion.Focus();
+                    return;
+                }
 
-            db.Regions.Add(new Region { NomRegion = txtNomRegion.Text.Trim() });
-            db.SaveChanges();
-            txtNomRegion.Clear();
-            ChargerRegions();
-            ChargerDepartements();
+                db.Regions.Add(new Region { NomRegion = txtNomRegion.Text.Trim() });
+                db.SaveChanges();
+                txtNomRegion.Clear();
+                ChargerRegions();
+                ChargerDepartements();
+                MessageBox.Show("Région ajoutée avec succès.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmLieu.btnAjouterRegion_Click");
+            }
         }
 
         private void btnSupprimerRegion_Click(object sender, EventArgs e)
         {
-            if (dgRegions.CurrentRow == null)
+            try
             {
-                MessageBox.Show("Selectionnez une region.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (dgRegions.CurrentRow == null)
+                {
+                    MessageBox.Show("Selectionnez une region.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (MessageBox.Show("Voulez-vous supprimer cette region ?", "Lieu", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("Voulez-vous supprimer cette region ?", "Lieu", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgRegions.CurrentRow.Cells["IdRegion"].Value);
+                var region = db.Regions.Find(id);
+                if (region == null)
+                {
+                    return;
+                }
+
+                bool contientDepartements = db.Departements.Any(d => d.IdRegion == id);
+                if (contientDepartements)
+                {
+                    MessageBox.Show("Impossible de supprimer cette region: des departements y sont rattaches.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                db.Regions.Remove(region);
+                db.SaveChanges();
+                ChargerRegions();
+                ChargerDepartements();
+                MessageBox.Show("Région supprimée avec succès.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmLieu.btnSupprimerRegion_Click");
             }
-
-            int id = Convert.ToInt32(dgRegions.CurrentRow.Cells["IdRegion"].Value);
-            var region = db.Regions.Find(id);
-            if (region == null)
-            {
-                return;
-            }
-
-            bool contientDepartements = db.Departements.Any(d => d.IdRegion == id);
-            if (contientDepartements)
-            {
-                MessageBox.Show("Impossible de supprimer cette region: des departements y sont rattaches.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            db.Regions.Remove(region);
-            db.SaveChanges();
-            ChargerRegions();
-            ChargerDepartements();
         }
 
         private void btnAjouterDepartement_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNomDepartement.Text))
+            try
             {
-                MessageBox.Show("Le nom du departement est obligatoire.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNomDepartement.Focus();
-                return;
+                if (string.IsNullOrWhiteSpace(txtNomDepartement.Text))
+                {
+                    MessageBox.Show("Le nom du departement est obligatoire.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNomDepartement.Focus();
+                    return;
+                }
+
+                if (cmbRegionDepartement.SelectedValue == null)
+                {
+                    MessageBox.Show("Selectionnez une region.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                db.Departements.Add(new Departement
+                {
+                    Nom = txtNomDepartement.Text.Trim(),
+                    IdRegion = Convert.ToInt32(cmbRegionDepartement.SelectedValue)
+                });
+
+                db.SaveChanges();
+                txtNomDepartement.Clear();
+                ChargerDepartements();
+                MessageBox.Show("Département ajouté avec succès.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            if (cmbRegionDepartement.SelectedValue == null)
+            catch (Exception ex)
             {
-                MessageBox.Show("Selectionnez une region.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                Logger.WriteLog(ex, "frmLieu.btnAjouterDepartement_Click");
             }
-
-            db.Departements.Add(new Departement
-            {
-                Nom = txtNomDepartement.Text.Trim(),
-                IdRegion = Convert.ToInt32(cmbRegionDepartement.SelectedValue)
-            });
-
-            db.SaveChanges();
-            txtNomDepartement.Clear();
-            ChargerDepartements();
         }
 
         private void btnSupprimerDepartement_Click(object sender, EventArgs e)
         {
-            if (dgDepartements.CurrentRow == null)
+            try
             {
-                MessageBox.Show("Selectionnez un departement.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (dgDepartements.CurrentRow == null)
+                {
+                    MessageBox.Show("Selectionnez un departement.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            if (MessageBox.Show("Voulez-vous supprimer ce departement ?", "Lieu", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("Voulez-vous supprimer ce departement ?", "Lieu", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                int id = Convert.ToInt32(dgDepartements.CurrentRow.Cells["IdDepartement"].Value);
+                var departement = db.Departements.Find(id);
+                if (departement == null)
+                {
+                    return;
+                }
+
+                db.Departements.Remove(departement);
+                db.SaveChanges();
+                ChargerDepartements();
+                MessageBox.Show("Département supprimé avec succès.", "Lieu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmLieu.btnSupprimerDepartement_Click");
             }
-
-            int id = Convert.ToInt32(dgDepartements.CurrentRow.Cells["IdDepartement"].Value);
-            var departement = db.Departements.Find(id);
-            if (departement == null)
-            {
-                return;
-            }
-
-            db.Departements.Remove(departement);
-            db.SaveChanges();
-            ChargerDepartements();
         }
     }
 }

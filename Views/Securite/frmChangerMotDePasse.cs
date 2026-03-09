@@ -1,3 +1,4 @@
+using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
 using System;
@@ -18,12 +19,19 @@ namespace AppSenAgriculture.Views.Securite
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
+                base.OnLoad(e);
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
+                db = new BdSenAgricultureContext();
             }
-            db = new BdSenAgricultureContext();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmChangerMotDePasse.OnLoad");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -37,52 +45,59 @@ namespace AppSenAgriculture.Views.Securite
 
         private void btnValider_Click(object sender, EventArgs e)
         {
-            var client = db.Clients.Find(_idClient);
-            if (client == null)
+            try
             {
-                MessageBox.Show("Client introuvable.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var client = db.Clients.Find(_idClient);
+                if (client == null)
+                {
+                    MessageBox.Show("Client introuvable.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string ancien = txtAncienMotDePasse.Text.Trim();
+                string nouveau = txtNouveauMotDePasse.Text.Trim();
+                string confirmation = txtConfirmerMotDePasse.Text.Trim();
+
+                string hashReference = !string.IsNullOrWhiteSpace(client.MotDePasseHash)
+                    ? client.MotDePasseHash
+                    : client.MotDePassePersonne;
+
+                if (!PasswordSecurity.VerifyPassword(ancien, hashReference))
+                {
+                    MessageBox.Show("Ancien mot de passe incorrect.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtAncienMotDePasse.Focus();
+                    return;
+                }
+
+                if (!string.Equals(nouveau, confirmation, StringComparison.Ordinal))
+                {
+                    MessageBox.Show("La confirmation du mot de passe ne correspond pas.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtConfirmerMotDePasse.Focus();
+                    return;
+                }
+
+                string policyError;
+                if (!PasswordSecurity.ValidatePasswordPolicy(nouveau, client.IdentifiantPersonne, out policyError))
+                {
+                    MessageBox.Show(policyError, "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNouveauMotDePasse.Focus();
+                    return;
+                }
+
+                string nouveauHash = PasswordSecurity.HashPassword(nouveau);
+                client.MotDePasseHash = nouveauHash;
+                client.MotDePassePersonne = nouveauHash;
+                client.DoitChangerMotDePasse = false;
+                db.SaveChanges();
+
+                MessageBox.Show("Mot de passe mis a jour avec succes.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
             }
-
-            string ancien = txtAncienMotDePasse.Text.Trim();
-            string nouveau = txtNouveauMotDePasse.Text.Trim();
-            string confirmation = txtConfirmerMotDePasse.Text.Trim();
-
-            string hashReference = !string.IsNullOrWhiteSpace(client.MotDePasseHash)
-                ? client.MotDePasseHash
-                : client.MotDePassePersonne;
-
-            if (!PasswordSecurity.VerifyPassword(ancien, hashReference))
+            catch (Exception ex)
             {
-                MessageBox.Show("Ancien mot de passe incorrect.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtAncienMotDePasse.Focus();
-                return;
+                Logger.WriteLog(ex, "frmChangerMotDePasse.btnValider_Click");
             }
-
-            if (!string.Equals(nouveau, confirmation, StringComparison.Ordinal))
-            {
-                MessageBox.Show("La confirmation du mot de passe ne correspond pas.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtConfirmerMotDePasse.Focus();
-                return;
-            }
-
-            string policyError;
-            if (!PasswordSecurity.ValidatePasswordPolicy(nouveau, client.IdentifiantPersonne, out policyError))
-            {
-                MessageBox.Show(policyError, "Securite", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNouveauMotDePasse.Focus();
-                return;
-            }
-
-            string nouveauHash = PasswordSecurity.HashPassword(nouveau);
-            client.MotDePasseHash = nouveauHash;
-            client.MotDePassePersonne = nouveauHash;
-            client.DoitChangerMotDePasse = false;
-            db.SaveChanges();
-
-            MessageBox.Show("Mot de passe mis a jour avec succes.", "Securite", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            Close();
         }
     }
 }

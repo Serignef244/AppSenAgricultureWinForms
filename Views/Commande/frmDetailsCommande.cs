@@ -1,3 +1,4 @@
+using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
 using System.Collections.Generic;
@@ -44,23 +45,30 @@ namespace AppSenAgriculture.Views.Commande
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
+                base.OnLoad(e);
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
+                db = new BdSenAgricultureContext();
+                ChargerClients();
+                ChargerProduits();
+                if (idCommande.HasValue)
+                {
+                    ChargerCommandePersistante();
+                }
+                else
+                {
+                    RafraichirAffichageBrouillon();
+                }
+                _isLoaded = true;
             }
-            db = new BdSenAgricultureContext();
-            ChargerClients();
-            ChargerProduits();
-            if (idCommande.HasValue)
+            catch (Exception ex)
             {
-                ChargerCommandePersistante();
+                Logger.WriteLog(ex, "frmDetailsCommande.OnLoad");
             }
-            else
-            {
-                RafraichirAffichageBrouillon();
-            }
-            _isLoaded = true;
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -295,22 +303,57 @@ namespace AppSenAgriculture.Views.Commande
 
         private void btnAjouterDetail_Click(object sender, EventArgs e)
         {
-            double quantite;
-            double prixUnitaire;
-            if (!SaisieDetailValide(out quantite, out prixUnitaire))
+            try
             {
-                return;
-            }
+                double quantite;
+                double prixUnitaire;
+                if (!SaisieDetailValide(out quantite, out prixUnitaire))
+                {
+                    return;
+                }
 
-            if (!idCommande.HasValue)
-            {
-                int idProduit = Convert.ToInt32(cmbProduit.SelectedValue);
-                int stockDisponible = StockDisponibleProduit(idProduit);
-                double dejaSaisie = QuantiteDejaSaisieBrouillon(idProduit, null);
-                if (dejaSaisie + quantite > stockDisponible)
+                if (!idCommande.HasValue)
+                {
+                    int idProduit = Convert.ToInt32(cmbProduit.SelectedValue);
+                    int stockDisponible = StockDisponibleProduit(idProduit);
+                    double dejaSaisie = QuantiteDejaSaisieBrouillon(idProduit, null);
+                    if (dejaSaisie + quantite > stockDisponible)
+                    {
+                        MessageBox.Show(
+                            "Quantite demandee superieure au stock disponible (" + stockDisponible + ").",
+                            "Details commande",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return;
+                    }
+
+                    dynamic selectedItem = cmbProduit.SelectedItem;
+                    lignesBrouillon.Add(new LigneBrouillon
+                    {
+                        IdProduit = idProduit,
+                        Produit = selectedItem.LibelleProduit,
+                        Quantite = quantite,
+                        PrixUnitaire = prixUnitaire
+                    });
+                    RafraichirAffichageBrouillon();
+                    return;
+                }
+
+                var detail = new DetailsCommande
+                {
+                    IdCommande = idCommande.Value,
+                    IdProduit = Convert.ToInt32(cmbProduit.SelectedValue),
+                    Quantite = quantite,
+                    PrixUnitaire = prixUnitaire
+                };
+
+                int stockDisponibleBase = StockDisponibleProduit(detail.IdProduit);
+                double dejaSaisieBase = QuantiteDejaSaisieBase(detail.IdProduit, null);
+                if (dejaSaisieBase + quantite > stockDisponibleBase)
                 {
                     MessageBox.Show(
-                        "Quantite demandee superieure au stock disponible (" + stockDisponible + ").",
+                        "Quantite demandee superieure au stock disponible (" + stockDisponibleBase + ").",
                         "Details commande",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning
@@ -318,78 +361,82 @@ namespace AppSenAgriculture.Views.Commande
                     return;
                 }
 
-                dynamic selectedItem = cmbProduit.SelectedItem;
-                lignesBrouillon.Add(new LigneBrouillon
+                db.DetailsCommandes.Add(detail);
+                var cmd = db.Commandes.Find(idCommande.Value);
+                if (cmd != null)
                 {
-                    IdProduit = idProduit,
-                    Produit = selectedItem.LibelleProduit,
-                    Quantite = quantite,
-                    PrixUnitaire = prixUnitaire
-                });
-                RafraichirAffichageBrouillon();
-                return;
+                    cmd.DateModificationCommande = DateTime.Now;
+                }
+                db.SaveChanges();
+                ChargerCommandePersistante();
             }
-
-            var detail = new DetailsCommande
+            catch (Exception ex)
             {
-                IdCommande = idCommande.Value,
-                IdProduit = Convert.ToInt32(cmbProduit.SelectedValue),
-                Quantite = quantite,
-                PrixUnitaire = prixUnitaire
-            };
-
-            int stockDisponibleBase = StockDisponibleProduit(detail.IdProduit);
-            double dejaSaisieBase = QuantiteDejaSaisieBase(detail.IdProduit, null);
-            if (dejaSaisieBase + quantite > stockDisponibleBase)
-            {
-                MessageBox.Show(
-                    "Quantite demandee superieure au stock disponible (" + stockDisponibleBase + ").",
-                    "Details commande",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return;
+                Logger.WriteLog(ex, "frmDetailsCommande.btnAjouterDetail_Click");
             }
-
-            db.DetailsCommandes.Add(detail);
-            var cmd = db.Commandes.Find(idCommande.Value);
-            if (cmd != null)
-            {
-                cmd.DateModificationCommande = DateTime.Now;
-            }
-            db.SaveChanges();
-            ChargerCommandePersistante();
         }
 
         private void btnModifierDetail_Click(object sender, EventArgs e)
         {
-            if (!SelectionDetailValide())
+            try
             {
-                MessageBox.Show("Selectionnez une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionDetailValide())
+                {
+                    MessageBox.Show("Selectionnez une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            double quantite;
-            double prixUnitaire;
-            if (!SaisieDetailValide(out quantite, out prixUnitaire))
-            {
-                return;
-            }
-
-            if (!idCommande.HasValue)
-            {
-                int index = dgDetails.CurrentRow.Index;
-                if (index < 0 || index >= lignesBrouillon.Count)
+                double quantite;
+                double prixUnitaire;
+                if (!SaisieDetailValide(out quantite, out prixUnitaire))
                 {
                     return;
                 }
-                int idProduit = Convert.ToInt32(cmbProduit.SelectedValue);
-                int stockDisponible = StockDisponibleProduit(idProduit);
-                double dejaSaisie = QuantiteDejaSaisieBrouillon(idProduit, index);
-                if (dejaSaisie + quantite > stockDisponible)
+
+                if (!idCommande.HasValue)
+                {
+                    int index = dgDetails.CurrentRow.Index;
+                    if (index < 0 || index >= lignesBrouillon.Count)
+                    {
+                        return;
+                    }
+                    int idProduit = Convert.ToInt32(cmbProduit.SelectedValue);
+                    int stockDisponible = StockDisponibleProduit(idProduit);
+                    double dejaSaisie = QuantiteDejaSaisieBrouillon(idProduit, index);
+                    if (dejaSaisie + quantite > stockDisponible)
+                    {
+                        MessageBox.Show(
+                            "Quantite demandee superieure au stock disponible (" + stockDisponible + ").",
+                            "Details commande",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return;
+                    }
+
+                    dynamic selectedItem = cmbProduit.SelectedItem;
+                    lignesBrouillon[index].IdProduit = idProduit;
+                    lignesBrouillon[index].Produit = selectedItem.LibelleProduit;
+                    lignesBrouillon[index].Quantite = quantite;
+                    lignesBrouillon[index].PrixUnitaire = prixUnitaire;
+                    RafraichirAffichageBrouillon();
+                    return;
+                }
+
+                int idDetail = Convert.ToInt32(dgDetails.CurrentRow.Cells["IdDetailsCommande"].Value);
+                var detail = db.DetailsCommandes.Find(idDetail);
+                if (detail == null)
+                {
+                    return;
+                }
+
+                int idProduitBase = Convert.ToInt32(cmbProduit.SelectedValue);
+                int stockDisponiblePersist = StockDisponibleProduit(idProduitBase);
+                double dejaSaisiePersist = QuantiteDejaSaisieBase(idProduitBase, idDetail);
+                if (dejaSaisiePersist + quantite > stockDisponiblePersist)
                 {
                     MessageBox.Show(
-                        "Quantite demandee superieure au stock disponible (" + stockDisponible + ").",
+                        "Quantite demandee superieure au stock disponible (" + stockDisponiblePersist + ").",
                         "Details commande",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning
@@ -397,81 +444,63 @@ namespace AppSenAgriculture.Views.Commande
                     return;
                 }
 
-                dynamic selectedItem = cmbProduit.SelectedItem;
-                lignesBrouillon[index].IdProduit = idProduit;
-                lignesBrouillon[index].Produit = selectedItem.LibelleProduit;
-                lignesBrouillon[index].Quantite = quantite;
-                lignesBrouillon[index].PrixUnitaire = prixUnitaire;
-                RafraichirAffichageBrouillon();
-                return;
+                detail.IdProduit = idProduitBase;
+                detail.Quantite = quantite;
+                detail.PrixUnitaire = prixUnitaire;
+                var cmd = db.Commandes.Find(idCommande.Value);
+                if (cmd != null)
+                {
+                    cmd.DateModificationCommande = DateTime.Now;
+                }
+                db.SaveChanges();
+                ChargerCommandePersistante();
             }
-
-            int idDetail = Convert.ToInt32(dgDetails.CurrentRow.Cells["IdDetailsCommande"].Value);
-            var detail = db.DetailsCommandes.Find(idDetail);
-            if (detail == null)
+            catch (Exception ex)
             {
-                return;
+                Logger.WriteLog(ex, "frmDetailsCommande.btnModifierDetail_Click");
             }
-
-            int idProduitBase = Convert.ToInt32(cmbProduit.SelectedValue);
-            int stockDisponiblePersist = StockDisponibleProduit(idProduitBase);
-            double dejaSaisiePersist = QuantiteDejaSaisieBase(idProduitBase, idDetail);
-            if (dejaSaisiePersist + quantite > stockDisponiblePersist)
-            {
-                MessageBox.Show(
-                    "Quantite demandee superieure au stock disponible (" + stockDisponiblePersist + ").",
-                    "Details commande",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-                return;
-            }
-
-            detail.IdProduit = idProduitBase;
-            detail.Quantite = quantite;
-            detail.PrixUnitaire = prixUnitaire;
-            var cmd = db.Commandes.Find(idCommande.Value);
-            if (cmd != null)
-            {
-                cmd.DateModificationCommande = DateTime.Now;
-            }
-            db.SaveChanges();
-            ChargerCommandePersistante();
         }
 
         private void btnSupprimerDetail_Click(object sender, EventArgs e)
         {
-            if (!SelectionDetailValide())
+            try
             {
-                MessageBox.Show("Selectionnez une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (!idCommande.HasValue)
-            {
-                int index = dgDetails.CurrentRow.Index;
-                if (index >= 0 && index < lignesBrouillon.Count)
+                if (!SelectionDetailValide())
                 {
-                    lignesBrouillon.RemoveAt(index);
-                    RafraichirAffichageBrouillon();
+                    MessageBox.Show("Selectionnez une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
-                return;
-            }
 
-            int idDetail = Convert.ToInt32(dgDetails.CurrentRow.Cells["IdDetailsCommande"].Value);
-            var detail = db.DetailsCommandes.Find(idDetail);
-            if (detail == null)
-            {
-                return;
+                if (!idCommande.HasValue)
+                {
+                    int index = dgDetails.CurrentRow.Index;
+                    if (index >= 0 && index < lignesBrouillon.Count)
+                    {
+                        lignesBrouillon.RemoveAt(index);
+                        RafraichirAffichageBrouillon();
+                    }
+                    return;
+                }
+
+                int idDetail = Convert.ToInt32(dgDetails.CurrentRow.Cells["IdDetailsCommande"].Value);
+                var detail = db.DetailsCommandes.Find(idDetail);
+                if (detail == null)
+                {
+                    return;
+                }
+                db.DetailsCommandes.Remove(detail);
+                var cmd = db.Commandes.Find(idCommande.Value);
+                if (cmd != null)
+                {
+                    cmd.DateModificationCommande = DateTime.Now;
+                }
+                db.SaveChanges();
+                ChargerCommandePersistante();
             }
-            db.DetailsCommandes.Remove(detail);
-            var cmd = db.Commandes.Find(idCommande.Value);
-            if (cmd != null)
+            catch (Exception ex)
             {
-                cmd.DateModificationCommande = DateTime.Now;
+                Logger.WriteLog(ex, "frmDetailsCommande.btnSupprimerDetail_Click");
             }
-            db.SaveChanges();
-            ChargerCommandePersistante();
         }
 
         private void btnChargerDetail_Click(object sender, EventArgs e)
@@ -488,137 +517,153 @@ namespace AppSenAgriculture.Views.Commande
 
         private void btnEnregistrer_Click(object sender, EventArgs e)
         {
-            if (idCommande.HasValue)
+            try
             {
-                MessageBox.Show("Commande deja enregistree.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (lignesBrouillon.Count == 0)
-            {
-                MessageBox.Show("Ajoutez au moins une ligne avant enregistrement.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            int? idClient = ClientSelectionne();
-            if (!idClient.HasValue)
-            {
-                MessageBox.Show("Selectionnez un client avant enregistrement.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var cmd = new AppSenAgriculture.Models.Commande
-            {
-                NumeroCommande = "CMD-" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"),
-                DateModificationCommande = DateTime.Now,
-                DateCommande = DateTime.Now,
-                IsCommande = false,
-                IdClient = idClient
-            };
-            db.Commandes.Add(cmd);
-            db.SaveChanges();
-
-            foreach (var l in lignesBrouillon)
-            {
-                db.DetailsCommandes.Add(new DetailsCommande
+                if (idCommande.HasValue)
                 {
-                    IdCommande = cmd.IdCommande,
-                    IdProduit = l.IdProduit,
-                    Quantite = l.Quantite,
-                    PrixUnitaire = l.PrixUnitaire
-                });
-            }
-            db.SaveChanges();
+                    MessageBox.Show("Commande deja enregistree.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            idCommande = cmd.IdCommande;
-            numeroCommande = cmd.NumeroCommande;
-            lignesBrouillon.Clear();
-            ChargerCommandePersistante();
+                if (lignesBrouillon.Count == 0)
+                {
+                    MessageBox.Show("Ajoutez au moins une ligne avant enregistrement.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int? idClient = ClientSelectionne();
+                if (!idClient.HasValue)
+                {
+                    MessageBox.Show("Selectionnez un client avant enregistrement.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var cmd = new AppSenAgriculture.Models.Commande
+                {
+                    NumeroCommande = "CMD-" + DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"),
+                    DateModificationCommande = DateTime.Now,
+                    DateCommande = DateTime.Now,
+                    IsCommande = false,
+                    IdClient = idClient
+                };
+                db.Commandes.Add(cmd);
+                db.SaveChanges();
+
+                foreach (var l in lignesBrouillon)
+                {
+                    db.DetailsCommandes.Add(new DetailsCommande
+                    {
+                        IdCommande = cmd.IdCommande,
+                        IdProduit = l.IdProduit,
+                        Quantite = l.Quantite,
+                        PrixUnitaire = l.PrixUnitaire
+                    });
+                }
+                db.SaveChanges();
+
+                idCommande = cmd.IdCommande;
+                numeroCommande = cmd.NumeroCommande;
+                lignesBrouillon.Clear();
+                ChargerCommandePersistante();
+                MessageBox.Show("Commande enregistrée avec succès.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmDetailsCommande.btnEnregistrer_Click");
+            }
         }
 
         private void btnValider_Click(object sender, EventArgs e)
         {
-            if (!idCommande.HasValue)
+            try
             {
-                MessageBox.Show("Enregistrez d'abord la commande.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var cmd = db.Commandes.Find(idCommande.Value);
-            if (cmd == null)
-            {
-                return;
-            }
-
-            if (cmd.IsCommande)
-            {
-                MessageBox.Show("Cette commande est deja validee.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (!cmd.IdClient.HasValue)
-            {
-                MessageBox.Show("Associez un client a cette commande avant validation.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            bool aDetails = db.DetailsCommandes.Any(d => d.IdCommande == idCommande.Value);
-            if (!aDetails)
-            {
-                MessageBox.Show("La commande doit contenir au moins une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var besoinsStock = db.DetailsCommandes
-                .Where(d => d.IdCommande == idCommande.Value)
-                .GroupBy(d => d.IdProduit)
-                .Select(g => new
+                if (!idCommande.HasValue)
                 {
-                    IdProduit = g.Key,
-                    QuantiteDemandee = g.Sum(x => x.Quantite)
-                })
-                .ToList();
-
-            foreach (var besoin in besoinsStock)
-            {
-                var stock = db.Stocks.FirstOrDefault(s => s.IdProduit == besoin.IdProduit);
-                int disponible = stock != null ? stock.QuanteStock : 0;
-                if (disponible < besoin.QuantiteDemandee)
-                {
-                    string libelleProduit = db.Produits
-                        .Where(p => p.IdProduit == besoin.IdProduit)
-                        .Select(p => p.LibelleProduit)
-                        .FirstOrDefault() ?? ("ID " + besoin.IdProduit);
-
-                    MessageBox.Show(
-                        "Stock insuffisant pour le produit " + libelleProduit
-                        + ". Disponible: " + disponible.ToString("N0")
-                        + " | Demande: " + besoin.QuantiteDemandee.ToString("N0") + ".",
-                        "Details commande",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
-                    );
+                    MessageBox.Show("Enregistrez d'abord la commande.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-            }
 
-            foreach (var besoin in besoinsStock)
-            {
-                var stock = db.Stocks.FirstOrDefault(s => s.IdProduit == besoin.IdProduit);
-                if (stock == null)
+                var cmd = db.Commandes.Find(idCommande.Value);
+                if (cmd == null)
                 {
-                    continue;
+                    return;
                 }
 
-                stock.QuanteStock -= Convert.ToInt32(Math.Ceiling(besoin.QuantiteDemandee));
-                stock.Date = DateTime.Now;
-            }
+                if (cmd.IsCommande)
+                {
+                    MessageBox.Show("Cette commande est deja validee.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            cmd.IsCommande = true;
-            cmd.DateModificationCommande = DateTime.Now;
-            db.SaveChanges();
-            isValidee = true;
-            ChargerCommandePersistante();
+                if (!cmd.IdClient.HasValue)
+                {
+                    MessageBox.Show("Associez un client a cette commande avant validation.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                bool aDetails = db.DetailsCommandes.Any(d => d.IdCommande == idCommande.Value);
+                if (!aDetails)
+                {
+                    MessageBox.Show("La commande doit contenir au moins une ligne.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var besoinsStock = db.DetailsCommandes
+                    .Where(d => d.IdCommande == idCommande.Value)
+                    .GroupBy(d => d.IdProduit)
+                    .Select(g => new
+                    {
+                        IdProduit = g.Key,
+                        QuantiteDemandee = g.Sum(x => x.Quantite)
+                    })
+                    .ToList();
+
+                foreach (var besoin in besoinsStock)
+                {
+                    var stock = db.Stocks.FirstOrDefault(s => s.IdProduit == besoin.IdProduit);
+                    int disponible = stock != null ? stock.QuanteStock : 0;
+                    if (disponible < besoin.QuantiteDemandee)
+                    {
+                        string libelleProduit = db.Produits
+                            .Where(p => p.IdProduit == besoin.IdProduit)
+                            .Select(p => p.LibelleProduit)
+                            .FirstOrDefault() ?? ("ID " + besoin.IdProduit);
+
+                        MessageBox.Show(
+                            "Stock insuffisant pour le produit " + libelleProduit
+                            + ". Disponible: " + disponible.ToString("N0")
+                            + " | Demande: " + besoin.QuantiteDemandee.ToString("N0") + ".",
+                            "Details commande",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return;
+                    }
+                }
+
+                foreach (var besoin in besoinsStock)
+                {
+                    var stock = db.Stocks.FirstOrDefault(s => s.IdProduit == besoin.IdProduit);
+                    if (stock == null)
+                    {
+                        continue;
+                    }
+
+                    stock.QuanteStock -= Convert.ToInt32(Math.Ceiling(besoin.QuantiteDemandee));
+                    stock.Date = DateTime.Now;
+                }
+
+                cmd.IsCommande = true;
+                cmd.DateModificationCommande = DateTime.Now;
+                db.SaveChanges();
+                isValidee = true;
+                ChargerCommandePersistante();
+                MessageBox.Show("Commande validée et stock mis à jour.", "Details commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmDetailsCommande.btnValider_Click");
+            }
         }
 
         private void cmbClient_SelectedIndexChanged(object sender, EventArgs e)

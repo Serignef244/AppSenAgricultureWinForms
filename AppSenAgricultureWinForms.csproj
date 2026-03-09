@@ -142,6 +142,7 @@
     <Compile Include="Models\Region.cs" />
     <Compile Include="Models\Stock.cs" />
     <Compile Include="Models\UniteMesure.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Security\PasswordSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

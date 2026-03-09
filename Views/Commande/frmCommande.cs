@@ -1,3 +1,4 @@
+using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
 using System.Linq;
@@ -17,15 +18,22 @@ namespace AppSenAgriculture.Views.Commande
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            try
             {
-                return;
+                base.OnLoad(e);
+                if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+                {
+                    return;
+                }
+                db = new BdSenAgricultureContext();
+                cmbFiltreStatut.SelectedIndex = 0;
+                _isLoaded = true;
+                ChargerCommandes();
             }
-            db = new BdSenAgricultureContext();
-            cmbFiltreStatut.SelectedIndex = 0;
-            _isLoaded = true;
-            ChargerCommandes();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmCommande.OnLoad");
+            }
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -116,30 +124,44 @@ namespace AppSenAgriculture.Views.Commande
 
         private void btnNouvelleCommande_Click(object sender, EventArgs e)
         {
-            using (var f = new frmDetailsCommande())
+            try
             {
-                f.ShowDialog(this);
+                using (var f = new frmDetailsCommande())
+                {
+                    f.ShowDialog(this);
+                }
+                ChargerCommandes();
             }
-            ChargerCommandes();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmCommande.btnNouvelleCommande_Click");
+            }
         }
 
         private void OuvrirCommandeSelectionnee()
         {
-            if (!SelectionCommandeValide())
+            try
             {
-                MessageBox.Show("Selectionnez une commande.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (!SelectionCommandeValide())
+                {
+                    MessageBox.Show("Selectionnez une commande.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                int id = GetCommandeSelectionnee();
+                string numero = Convert.ToString(dgCommandes.CurrentRow.Cells["NumeroCommande"].Value);
+
+                using (var f = new frmDetailsCommande(id, numero))
+                {
+                    f.ShowDialog(this);
+                }
+
+                ChargerCommandes();
             }
-
-            int id = GetCommandeSelectionnee();
-            string numero = Convert.ToString(dgCommandes.CurrentRow.Cells["NumeroCommande"].Value);
-
-            using (var f = new frmDetailsCommande(id, numero))
+            catch (Exception ex)
             {
-                f.ShowDialog(this);
+                Logger.WriteLog(ex, "frmCommande.OuvrirCommandeSelectionnee");
             }
-
-            ChargerCommandes();
         }
 
         private void btnDetailsCommande_Click(object sender, EventArgs e)
@@ -149,38 +171,46 @@ namespace AppSenAgriculture.Views.Commande
 
         private void btnSupprimerCommande_Click(object sender, EventArgs e)
         {
-            if (!SelectionCommandeValide())
+            try
             {
-                MessageBox.Show("Selectionnez une commande.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+                if (!SelectionCommandeValide())
+                {
+                    MessageBox.Show("Selectionnez une commande.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
-            int id = GetCommandeSelectionnee();
-            var commande = db.Commandes.Find(id);
-            if (commande == null)
-            {
-                return;
-            }
+                int id = GetCommandeSelectionnee();
+                var commande = db.Commandes.Find(id);
+                if (commande == null)
+                {
+                    return;
+                }
 
-            if (commande.IsCommande)
-            {
-                MessageBox.Show("Impossible de supprimer une commande validee.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (commande.IsCommande)
+                {
+                    MessageBox.Show("Impossible de supprimer une commande validee.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            if (MessageBox.Show("Supprimer cette commande et ses details ?", "Commande", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-            {
-                return;
-            }
+                if (MessageBox.Show("Supprimer cette commande et ses details ?", "Commande", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
 
-            var details = db.DetailsCommandes.Where(d => d.IdCommande == id).ToList();
-            if (details.Count > 0)
-            {
-                db.DetailsCommandes.RemoveRange(details);
+                var details = db.DetailsCommandes.Where(d => d.IdCommande == id).ToList();
+                if (details.Count > 0)
+                {
+                    db.DetailsCommandes.RemoveRange(details);
+                }
+                db.Commandes.Remove(commande);
+                db.SaveChanges();
+                ChargerCommandes();
+                MessageBox.Show("Commande supprimée avec succès.", "Commande", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            db.Commandes.Remove(commande);
-            db.SaveChanges();
-            ChargerCommandes();
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmCommande.btnSupprimerCommande_Click");
+            }
         }
 
         private void cmbFiltreStatut_SelectedIndexChanged(object sender, EventArgs e)
