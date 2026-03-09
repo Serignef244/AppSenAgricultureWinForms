@@ -131,5 +131,13 @@ namespace AppSenAgriculture
         {
             Application.Exit();
         }
+
+        private void lnkMotDePasseOublie_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using (var f = new frmMotDePasseOublie())
+            {
+                f.ShowDialog(this);
+            }
+        }
     }
 }

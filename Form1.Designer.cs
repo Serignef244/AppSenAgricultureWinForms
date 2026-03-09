@@ -32,8 +32,8 @@
             this.txtIdentifiant = new System.Windows.Forms.TextBox();
             this.txtMotDePasse = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnQuitter = new System.Windows.Forms.Button();
             this.bnSeConnecter = new System.Windows.Forms.Button();
+            this.lnkMotDePasseOublie = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label1
@@ -95,12 +95,25 @@
             this.bnSeConnecter.UseVisualStyleBackColor = true;
             this.bnSeConnecter.Click += new System.EventHandler(this.bnSeConnecter_Click);
             // 
+            // lnkMotDePasseOublie
+            // 
+            this.lnkMotDePasseOublie.AutoSize = true;
+            this.lnkMotDePasseOublie.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkMotDePasseOublie.Location = new System.Drawing.Point(420, 222);
+            this.lnkMotDePasseOublie.Name = "lnkMotDePasseOublie";
+            this.lnkMotDePasseOublie.Size = new System.Drawing.Size(139, 16);
+            this.lnkMotDePasseOublie.TabIndex = 5;
+            this.lnkMotDePasseOublie.TabStop = true;
+            this.lnkMotDePasseOublie.Text = "Mot de passe oublié ?";
+            this.lnkMotDePasseOublie.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkMotDePasseOublie_LinkClicked);
+            // 
             // frmConnexion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(599, 338);
             this.ControlBox = false;
+            this.Controls.Add(this.lnkMotDePasseOublie);
             this.Controls.Add(this.bnSeConnecter);
             this.Controls.Add(this.btnQuitter);
             this.Controls.Add(this.txtMotDePasse);
@@ -124,6 +137,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnQuitter;
         private System.Windows.Forms.Button bnSeConnecter;
+        private System.Windows.Forms.LinkLabel lnkMotDePasseOublie;
     }
 }
 
