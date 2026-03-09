@@ -32,6 +32,7 @@
             this.txtIdentifiant = new System.Windows.Forms.TextBox();
             this.txtMotDePasse = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnQuitter = new System.Windows.Forms.Button();
             this.bnSeConnecter = new System.Windows.Forms.Button();
             this.lnkMotDePasseOublie = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
