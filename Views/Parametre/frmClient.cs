@@ -147,13 +147,7 @@ namespace AppSenAgriculture.Views.Parametre
                 return;
             }
 
-            string motDePasseTemporaire = PasswordSecurity.GenerateTemporaryPassword();
-            string policyError;
-            if (!PasswordSecurity.ValidatePasswordPolicy(motDePasseTemporaire, identifiant, out policyError))
-            {
-                MessageBox.Show("Mot de passe temporaire invalide: " + policyError, "Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            string motDePasseTemporaire = "passer";
 
             string passwordHash = PasswordSecurity.HashPassword(motDePasseTemporaire);
 

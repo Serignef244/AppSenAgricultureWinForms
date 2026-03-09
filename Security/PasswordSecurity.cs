@@ -7,15 +7,32 @@ namespace AppSenAgriculture.Security
 {
     public static class PasswordSecurity
     {
-        public const string PasswordPrefix = "SHA256:";
+        public const string PasswordPrefix = "PBKDF2$";
+        private const int SaltSize = 16;
+        private const int KeySize = 32;
+        private const int Iterations = 100000;
 
         public static string HashPassword(string plainTextPassword)
         {
-            using (var sha = SHA256.Create())
+            byte[] salt = new byte[SaltSize];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                byte[] bytes = Encoding.UTF8.GetBytes(plainTextPassword ?? string.Empty);
-                byte[] hash = sha.ComputeHash(bytes);
-                return PasswordPrefix + Convert.ToBase64String(hash);
+                rng.GetBytes(salt);
+            }
+
+            using (var pbkdf2 = new Rfc2898DeriveBytes(
+                plainTextPassword ?? string.Empty,
+                salt,
+                Iterations,
+                HashAlgorithmName.SHA256))
+            {
+                byte[] key = pbkdf2.GetBytes(KeySize);
+                return PasswordPrefix
+                    + Iterations.ToString()
+                    + "$"
+                    + Convert.ToBase64String(salt)
+                    + "$"
+                    + Convert.ToBase64String(key);
             }
         }
 
@@ -28,20 +45,80 @@ namespace AppSenAgriculture.Security
 
             if (storedPassword.StartsWith(PasswordPrefix, StringComparison.Ordinal))
             {
-                return string.Equals(HashPassword(inputPassword), storedPassword, StringComparison.Ordinal);
+                string[] parts = storedPassword.Split('$');
+                if (parts.Length != 4)
+                {
+                    return false;
+                }
+
+                int iterations;
+                if (!int.TryParse(parts[1], out iterations) || iterations <= 0)
+                {
+                    return false;
+                }
+
+                byte[] salt;
+                byte[] expected;
+                try
+                {
+                    salt = Convert.FromBase64String(parts[2]);
+                    expected = Convert.FromBase64String(parts[3]);
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
+
+                using (var pbkdf2 = new Rfc2898DeriveBytes(
+                    inputPassword ?? string.Empty,
+                    salt,
+                    iterations,
+                    HashAlgorithmName.SHA256))
+                {
+                    byte[] actual = pbkdf2.GetBytes(expected.Length);
+                    return ConstantTimeEquals(actual, expected);
+                }
+            }
+
+            // Legacy support for previous SHA256 format.
+            if (storedPassword.StartsWith("SHA256:", StringComparison.Ordinal))
+            {
+                using (var sha = SHA256.Create())
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes(inputPassword ?? string.Empty);
+                    byte[] hash = sha.ComputeHash(bytes);
+                    string legacyHash = "SHA256:" + Convert.ToBase64String(hash);
+                    return string.Equals(legacyHash, storedPassword, StringComparison.Ordinal);
+                }
             }
 
             // Backward compatibility for legacy clear-text values.
             return string.Equals(inputPassword, storedPassword, StringComparison.Ordinal);
         }
 
+        private static bool ConstantTimeEquals(byte[] left, byte[] right)
+        {
+            if (left == null || right == null || left.Length != right.Length)
+            {
+                return false;
+            }
+
+            int diff = 0;
+            for (int i = 0; i < left.Length; i++)
+            {
+                diff |= left[i] ^ right[i];
+            }
+
+            return diff == 0;
+        }
+
         public static bool ValidatePasswordPolicy(string password, string identifiant, out string errorMessage)
         {
             errorMessage = null;
 
-            if (string.IsNullOrEmpty(password) || password.Length < 6)
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
             {
-                errorMessage = "Le mot de passe doit contenir au moins 6 caracteres.";
+                errorMessage = "Le mot de passe doit contenir au moins 8 caracteres.";
                 return false;
             }
 

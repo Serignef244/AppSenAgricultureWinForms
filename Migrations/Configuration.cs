@@ -2,14 +2,16 @@ namespace AppSenAgriculture.Migrations
 {
     using System;
     using System.Security.Cryptography;
-    using System.Text;
     using System.Data.Entity.Migrations;
     using System.Linq;
     using AppSenAgriculture.Models;
 
     internal sealed class Configuration : DbMigrationsConfiguration<AppSenAgriculture.Models.BdSenAgricultureContext>
     {
-        private const string PasswordPrefix = "SHA256:";
+        private const string PasswordPrefix = "PBKDF2$";
+        private const int SaltSize = 16;
+        private const int KeySize = 32;
+        private const int Iterations = 100000;
 
         public Configuration()
         {
@@ -19,11 +21,25 @@ namespace AppSenAgriculture.Migrations
 
         private static string HashPassword(string plainTextPassword)
         {
-            using (var sha = SHA256.Create())
+            byte[] salt = new byte[SaltSize];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                byte[] bytes = Encoding.UTF8.GetBytes(plainTextPassword ?? string.Empty);
-                byte[] hash = sha.ComputeHash(bytes);
-                return PasswordPrefix + Convert.ToBase64String(hash);
+                rng.GetBytes(salt);
+            }
+
+            using (var pbkdf2 = new Rfc2898DeriveBytes(
+                plainTextPassword ?? string.Empty,
+                salt,
+                Iterations,
+                HashAlgorithmName.SHA256))
+            {
+                byte[] key = pbkdf2.GetBytes(KeySize);
+                return PasswordPrefix
+                    + Iterations.ToString()
+                    + "$"
+                    + Convert.ToBase64String(salt)
+                    + "$"
+                    + Convert.ToBase64String(key);
             }
         }
 
