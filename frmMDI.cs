@@ -10,6 +10,8 @@ namespace AppSenAgriculture
 {
     public partial class frmMDI : Form
     {
+        private Button _activeNavigationButton;
+
         public frmMDI()
         {
             InitializeComponent();
@@ -24,6 +26,37 @@ namespace AppSenAgriculture
             }
         }
 
+        private void SetActiveNavigation(Button activeButton, string title)
+        {
+            Button[] buttons =
+            {
+                btnProduit,
+                btnCategorie,
+                btnLieu,
+                btnClient,
+                btnCommande,
+                btnStock,
+                btnDeconnexion,
+                btnQuitterApp
+            };
+
+            foreach (Button button in buttons)
+            {
+                button.BackColor = Color.Transparent;
+                button.ForeColor = Color.FromArgb(245, 240, 232);
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(45, 80, 22);
+            }
+
+            if (activeButton != null)
+            {
+                activeButton.BackColor = Color.FromArgb(232, 101, 26);
+                activeButton.ForeColor = Color.White;
+            }
+
+            _activeNavigationButton = activeButton;
+            lblTopTitle.Text = title;
+        }
+
         private void produitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -33,6 +66,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnProduit, "Produits");
             }
             catch (Exception ex)
             {
@@ -42,11 +76,13 @@ namespace AppSenAgriculture
 
         private void seDeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SetActiveNavigation(btnDeconnexion, "Session");
             this.Close();
         }
 
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SetActiveNavigation(btnQuitterApp, "Application");
             Application.Exit();
         }
 
@@ -59,6 +95,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnCategorie, "Categories");
             }
             catch (Exception ex)
             {
@@ -75,6 +112,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnLieu, "Lieux");
             }
             catch (Exception ex)
             {
@@ -91,6 +129,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnClient, "Clients");
             }
             catch (Exception ex)
             {
@@ -107,6 +146,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnCommande, "Commandes");
             }
             catch (Exception ex)
             {
@@ -123,6 +163,7 @@ namespace AppSenAgriculture
                 f.MdiParent = this;
                 f.Show();
                 f.WindowState = FormWindowState.Maximized;
+                SetActiveNavigation(btnStock, "Stock");
             }
             catch (Exception ex)
             {
@@ -136,6 +177,19 @@ namespace AppSenAgriculture
             this.Width = myComputer.Screen.Bounds.Width;
             this.Height = myComputer.Screen.Bounds.Height;
             this.Location = new Point(0, 0);
+            this.WindowState = FormWindowState.Maximized;
+
+            foreach (Control control in Controls)
+            {
+                MdiClient client = control as MdiClient;
+                if (client != null)
+                {
+                    client.BackColor = Color.FromArgb(245, 240, 232);
+                    break;
+                }
+            }
+
+            SetActiveNavigation(_activeNavigationButton, "Tableau de bord");
         }
     }
 }

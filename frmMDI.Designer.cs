@@ -1,4 +1,4 @@
-﻿namespace AppSenAgriculture
+namespace AppSenAgriculture
 {
     partial class frmMDI
     {
@@ -23,157 +23,251 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Required method for Designer support.
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.seDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paramettreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.produitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lieuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.venteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commandeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            this.pnlSidebar = new System.Windows.Forms.Panel();
+            this.btnQuitterApp = new System.Windows.Forms.Button();
+            this.btnDeconnexion = new System.Windows.Forms.Button();
+            this.btnStock = new System.Windows.Forms.Button();
+            this.btnCommande = new System.Windows.Forms.Button();
+            this.btnClient = new System.Windows.Forms.Button();
+            this.btnLieu = new System.Windows.Forms.Button();
+            this.btnCategorie = new System.Windows.Forms.Button();
+            this.btnProduit = new System.Windows.Forms.Button();
+            this.lblSidebarCaption = new System.Windows.Forms.Label();
+            this.lblSidebarTitle = new System.Windows.Forms.Label();
+            this.pnlTopBar = new System.Windows.Forms.Panel();
+            this.lblTopSubtitle = new System.Windows.Forms.Label();
+            this.lblTopTitle = new System.Windows.Forms.Label();
+            this.pnlSidebar.SuspendLayout();
+            this.pnlTopBar.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // pnlSidebar
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.actionToolStripMenuItem,
-            this.paramettreToolStripMenuItem,
-            this.venteToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(538, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.pnlSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(46)))), ((int)(((byte)(15)))));
+            this.pnlSidebar.Controls.Add(this.btnQuitterApp);
+            this.pnlSidebar.Controls.Add(this.btnDeconnexion);
+            this.pnlSidebar.Controls.Add(this.btnStock);
+            this.pnlSidebar.Controls.Add(this.btnCommande);
+            this.pnlSidebar.Controls.Add(this.btnClient);
+            this.pnlSidebar.Controls.Add(this.btnLieu);
+            this.pnlSidebar.Controls.Add(this.btnCategorie);
+            this.pnlSidebar.Controls.Add(this.btnProduit);
+            this.pnlSidebar.Controls.Add(this.lblSidebarCaption);
+            this.pnlSidebar.Controls.Add(this.lblSidebarTitle);
+            this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
+            this.pnlSidebar.Name = "pnlSidebar";
+            this.pnlSidebar.Size = new System.Drawing.Size(230, 661);
+            this.pnlSidebar.TabIndex = 0;
             // 
-            // actionToolStripMenuItem
+            // btnQuitterApp
             // 
-            this.actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.seDeToolStripMenuItem,
-            this.quitterToolStripMenuItem});
-            this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
-            this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.actionToolStripMenuItem.Text = "&Action";
+            this.btnQuitterApp.FlatAppearance.BorderSize = 0;
+            this.btnQuitterApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuitterApp.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnQuitterApp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnQuitterApp.Location = new System.Drawing.Point(20, 578);
+            this.btnQuitterApp.Name = "btnQuitterApp";
+            this.btnQuitterApp.Size = new System.Drawing.Size(190, 42);
+            this.btnQuitterApp.TabIndex = 9;
+            this.btnQuitterApp.Text = "Quitter";
+            this.btnQuitterApp.UseVisualStyleBackColor = true;
+            this.btnQuitterApp.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
-            // seDeToolStripMenuItem
+            // btnDeconnexion
             // 
-            this.seDeToolStripMenuItem.Name = "seDeToolStripMenuItem";
-            this.seDeToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.seDeToolStripMenuItem.Text = "&Se deconnecter";
-            this.seDeToolStripMenuItem.Click += new System.EventHandler(this.seDeToolStripMenuItem_Click);
+            this.btnDeconnexion.FlatAppearance.BorderSize = 0;
+            this.btnDeconnexion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeconnexion.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnDeconnexion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnDeconnexion.Location = new System.Drawing.Point(20, 530);
+            this.btnDeconnexion.Name = "btnDeconnexion";
+            this.btnDeconnexion.Size = new System.Drawing.Size(190, 42);
+            this.btnDeconnexion.TabIndex = 8;
+            this.btnDeconnexion.Text = "Se deconnecter";
+            this.btnDeconnexion.UseVisualStyleBackColor = true;
+            this.btnDeconnexion.Click += new System.EventHandler(this.seDeToolStripMenuItem_Click);
             // 
-            // quitterToolStripMenuItem
+            // btnStock
             // 
-            this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.quitterToolStripMenuItem.Text = "&Quitter";
-            this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
+            this.btnStock.FlatAppearance.BorderSize = 0;
+            this.btnStock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStock.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnStock.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnStock.Location = new System.Drawing.Point(20, 377);
+            this.btnStock.Name = "btnStock";
+            this.btnStock.Size = new System.Drawing.Size(190, 42);
+            this.btnStock.TabIndex = 7;
+            this.btnStock.Text = "Stock";
+            this.btnStock.UseVisualStyleBackColor = true;
+            this.btnStock.Click += new System.EventHandler(this.stockToolStripMenuItem_Click);
             // 
-            // paramettreToolStripMenuItem
+            // btnCommande
             // 
-            this.paramettreToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.produitToolStripMenuItem,
-            this.cToolStripMenuItem,
-            this.lieuToolStripMenuItem,
-            this.clientToolStripMenuItem});
-            this.paramettreToolStripMenuItem.Name = "paramettreToolStripMenuItem";
-            this.paramettreToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
-            this.paramettreToolStripMenuItem.Text = "Paramettre";
+            this.btnCommande.FlatAppearance.BorderSize = 0;
+            this.btnCommande.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCommande.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCommande.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnCommande.Location = new System.Drawing.Point(20, 329);
+            this.btnCommande.Name = "btnCommande";
+            this.btnCommande.Size = new System.Drawing.Size(190, 42);
+            this.btnCommande.TabIndex = 6;
+            this.btnCommande.Text = "Commandes";
+            this.btnCommande.UseVisualStyleBackColor = true;
+            this.btnCommande.Click += new System.EventHandler(this.commandeToolStripMenuItem_Click);
             // 
-            // produitToolStripMenuItem
+            // btnClient
             // 
-            this.produitToolStripMenuItem.Name = "produitToolStripMenuItem";
-            this.produitToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
-            this.produitToolStripMenuItem.Text = "&Produit";
-            this.produitToolStripMenuItem.Click += new System.EventHandler(this.produitToolStripMenuItem_Click);
+            this.btnClient.FlatAppearance.BorderSize = 0;
+            this.btnClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClient.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnClient.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnClient.Location = new System.Drawing.Point(20, 281);
+            this.btnClient.Name = "btnClient";
+            this.btnClient.Size = new System.Drawing.Size(190, 42);
+            this.btnClient.TabIndex = 5;
+            this.btnClient.Text = "Clients";
+            this.btnClient.UseVisualStyleBackColor = true;
+            this.btnClient.Click += new System.EventHandler(this.clientToolStripMenuItem_Click);
             // 
-            // cToolStripMenuItem
+            // btnLieu
             // 
-            this.cToolStripMenuItem.Name = "cToolStripMenuItem";
-            this.cToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
-            this.cToolStripMenuItem.Text = "&Categorie";
-            this.cToolStripMenuItem.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
+            this.btnLieu.FlatAppearance.BorderSize = 0;
+            this.btnLieu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLieu.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnLieu.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnLieu.Location = new System.Drawing.Point(20, 233);
+            this.btnLieu.Name = "btnLieu";
+            this.btnLieu.Size = new System.Drawing.Size(190, 42);
+            this.btnLieu.TabIndex = 4;
+            this.btnLieu.Text = "Lieux";
+            this.btnLieu.UseVisualStyleBackColor = true;
+            this.btnLieu.Click += new System.EventHandler(this.lieuToolStripMenuItem_Click);
             // 
-            // lieuToolStripMenuItem
+            // btnCategorie
             // 
-            this.lieuToolStripMenuItem.Name = "lieuToolStripMenuItem";
-            this.lieuToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.lieuToolStripMenuItem.Text = "&Lieu";
-            this.lieuToolStripMenuItem.Click += new System.EventHandler(this.lieuToolStripMenuItem_Click);
+            this.btnCategorie.FlatAppearance.BorderSize = 0;
+            this.btnCategorie.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCategorie.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCategorie.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnCategorie.Location = new System.Drawing.Point(20, 185);
+            this.btnCategorie.Name = "btnCategorie";
+            this.btnCategorie.Size = new System.Drawing.Size(190, 42);
+            this.btnCategorie.TabIndex = 3;
+            this.btnCategorie.Text = "Categories";
+            this.btnCategorie.UseVisualStyleBackColor = true;
+            this.btnCategorie.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
             // 
-            // clientToolStripMenuItem
+            // btnProduit
             // 
-            this.clientToolStripMenuItem.Name = "clientToolStripMenuItem";
-            this.clientToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.clientToolStripMenuItem.Text = "C&lient";
-            this.clientToolStripMenuItem.Click += new System.EventHandler(this.clientToolStripMenuItem_Click);
+            this.btnProduit.FlatAppearance.BorderSize = 0;
+            this.btnProduit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProduit.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnProduit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnProduit.Location = new System.Drawing.Point(20, 137);
+            this.btnProduit.Name = "btnProduit";
+            this.btnProduit.Size = new System.Drawing.Size(190, 42);
+            this.btnProduit.TabIndex = 2;
+            this.btnProduit.Text = "Produits";
+            this.btnProduit.UseVisualStyleBackColor = true;
+            this.btnProduit.Click += new System.EventHandler(this.produitToolStripMenuItem_Click);
             // 
-            // venteToolStripMenuItem
+            // lblSidebarCaption
             // 
-            this.venteToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.commandeToolStripMenuItem,
-            this.stockToolStripMenuItem});
-            this.venteToolStripMenuItem.Name = "venteToolStripMenuItem";
-            this.venteToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-            this.venteToolStripMenuItem.Text = "&Vente";
+            this.lblSidebarCaption.AutoSize = true;
+            this.lblSidebarCaption.Font = new System.Drawing.Font("Source Sans 3", 10.5F);
+            this.lblSidebarCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(137)))), ((int)(((byte)(42)))));
+            this.lblSidebarCaption.Location = new System.Drawing.Point(21, 84);
+            this.lblSidebarCaption.Name = "lblSidebarCaption";
+            this.lblSidebarCaption.Size = new System.Drawing.Size(136, 18);
+            this.lblSidebarCaption.TabIndex = 1;
+            this.lblSidebarCaption.Text = "Terre, stock et ventes";
             // 
-            // commandeToolStripMenuItem
+            // lblSidebarTitle
             // 
-            this.commandeToolStripMenuItem.Name = "commandeToolStripMenuItem";
-            this.commandeToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.commandeToolStripMenuItem.Text = "&Commande";
-            this.commandeToolStripMenuItem.Click += new System.EventHandler(this.commandeToolStripMenuItem_Click);
+            this.lblSidebarTitle.AutoSize = true;
+            this.lblSidebarTitle.Font = new System.Drawing.Font("Playfair Display", 18F, System.Drawing.FontStyle.Bold);
+            this.lblSidebarTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.lblSidebarTitle.Location = new System.Drawing.Point(19, 48);
+            this.lblSidebarTitle.Name = "lblSidebarTitle";
+            this.lblSidebarTitle.Size = new System.Drawing.Size(184, 30);
+            this.lblSidebarTitle.TabIndex = 0;
+            this.lblSidebarTitle.Text = "AppSenAgriculture";
             // 
-            // stockToolStripMenuItem
+            // pnlTopBar
             // 
-            this.stockToolStripMenuItem.Name = "stockToolStripMenuItem";
-            this.stockToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.stockToolStripMenuItem.Text = "&Stock";
-            this.stockToolStripMenuItem.Click += new System.EventHandler(this.stockToolStripMenuItem_Click);
+            this.pnlTopBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.pnlTopBar.Controls.Add(this.lblTopSubtitle);
+            this.pnlTopBar.Controls.Add(this.lblTopTitle);
+            this.pnlTopBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTopBar.Location = new System.Drawing.Point(230, 0);
+            this.pnlTopBar.Name = "pnlTopBar";
+            this.pnlTopBar.Size = new System.Drawing.Size(837, 78);
+            this.pnlTopBar.TabIndex = 1;
+            // 
+            // lblTopSubtitle
+            // 
+            this.lblTopSubtitle.AutoSize = true;
+            this.lblTopSubtitle.Font = new System.Drawing.Font("Source Sans 3", 11F);
+            this.lblTopSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(74)))), ((int)(((byte)(60)))));
+            this.lblTopSubtitle.Location = new System.Drawing.Point(31, 43);
+            this.lblTopSubtitle.Name = "lblTopSubtitle";
+            this.lblTopSubtitle.Size = new System.Drawing.Size(313, 19);
+            this.lblTopSubtitle.TabIndex = 1;
+            this.lblTopSubtitle.Text = "Pilotage des produits, clients, commandes et stock";
+            // 
+            // lblTopTitle
+            // 
+            this.lblTopTitle.AutoSize = true;
+            this.lblTopTitle.Font = new System.Drawing.Font("Playfair Display", 20F, System.Drawing.FontStyle.Bold);
+            this.lblTopTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(24)))), ((int)(((byte)(16)))));
+            this.lblTopTitle.Location = new System.Drawing.Point(28, 9);
+            this.lblTopTitle.Name = "lblTopTitle";
+            this.lblTopTitle.Size = new System.Drawing.Size(232, 34);
+            this.lblTopTitle.TabIndex = 0;
+            this.lblTopTitle.Text = "Tableau de bord";
             // 
             // frmMDI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(538, 321);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.ClientSize = new System.Drawing.Size(1067, 661);
             this.ControlBox = false;
-            this.Controls.Add(this.menuStrip1);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Controls.Add(this.pnlTopBar);
+            this.Controls.Add(this.pnlSidebar);
+            this.Font = new System.Drawing.Font("Source Sans 3", 12F);
             this.IsMdiContainer = true;
-            this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmMDI";
-            this.Text = "Sen Agriculture :: Se connecter";
+            this.Text = "Sen Agriculture :: Tableau de bord";
             this.Load += new System.EventHandler(this.frmMDI_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.pnlSidebar.ResumeLayout(false);
+            this.pnlSidebar.PerformLayout();
+            this.pnlTopBar.ResumeLayout(false);
+            this.pnlTopBar.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem seDeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem paramettreToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem produitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem lieuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clientToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem venteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem commandeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stockToolStripMenuItem;
+        private System.Windows.Forms.Panel pnlSidebar;
+        private System.Windows.Forms.Button btnQuitterApp;
+        private System.Windows.Forms.Button btnDeconnexion;
+        private System.Windows.Forms.Button btnStock;
+        private System.Windows.Forms.Button btnCommande;
+        private System.Windows.Forms.Button btnClient;
+        private System.Windows.Forms.Button btnLieu;
+        private System.Windows.Forms.Button btnCategorie;
+        private System.Windows.Forms.Button btnProduit;
+        private System.Windows.Forms.Label lblSidebarCaption;
+        private System.Windows.Forms.Label lblSidebarTitle;
+        private System.Windows.Forms.Panel pnlTopBar;
+        private System.Windows.Forms.Label lblTopSubtitle;
+        private System.Windows.Forms.Label lblTopTitle;
     }
 }
