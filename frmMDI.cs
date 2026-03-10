@@ -31,6 +31,7 @@ namespace AppSenAgriculture
         {
             Button[] buttons =
             {
+                btnAccueil,
                 btnProduit,
                 btnCategorie,
                 btnLieu,
@@ -46,6 +47,8 @@ namespace AppSenAgriculture
                 button.BackColor = Color.Transparent;
                 button.ForeColor = AppTheme.WarmCream;
                 button.FlatAppearance.MouseOverBackColor = AppTheme.SavannaGreen;
+                button.TextAlign = ContentAlignment.MiddleLeft;
+                button.Padding = new Padding(12, 0, 0, 0);
             }
 
             if (activeButton != null)
@@ -122,6 +125,14 @@ namespace AppSenAgriculture
         {
             SetActiveNavigation(btnDeconnexion, "Session");
             this.Close();
+        }
+
+        private void btnAccueil_Click(object sender, EventArgs e)
+        {
+            fermer();
+            RefreshDashboardMetrics();
+            ShowDashboard(true);
+            SetActiveNavigation(btnAccueil, "Tableau de bord");
         }
 
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -255,7 +266,7 @@ namespace AppSenAgriculture
 
             RefreshDashboardMetrics();
             ShowDashboard(true);
-            SetActiveNavigation(_activeNavigationButton, "Tableau de bord");
+            SetActiveNavigation(btnAccueil, "Tableau de bord");
         }
     }
 }

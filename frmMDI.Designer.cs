@@ -36,6 +36,7 @@ namespace AppSenAgriculture
             this.btnLieu = new System.Windows.Forms.Button();
             this.btnCategorie = new System.Windows.Forms.Button();
             this.btnProduit = new System.Windows.Forms.Button();
+            this.btnAccueil = new System.Windows.Forms.Button();
             this.lblSidebarCaption = new System.Windows.Forms.Label();
             this.lblSidebarTitle = new System.Windows.Forms.Label();
             this.pnlTopBar = new System.Windows.Forms.Panel();
@@ -71,6 +72,7 @@ namespace AppSenAgriculture
             this.pnlSidebar.Controls.Add(this.btnLieu);
             this.pnlSidebar.Controls.Add(this.btnCategorie);
             this.pnlSidebar.Controls.Add(this.btnProduit);
+            this.pnlSidebar.Controls.Add(this.btnAccueil);
             this.pnlSidebar.Controls.Add(this.lblSidebarCaption);
             this.pnlSidebar.Controls.Add(this.lblSidebarTitle);
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
@@ -89,7 +91,7 @@ namespace AppSenAgriculture
             this.btnQuitterApp.Name = "btnQuitterApp";
             this.btnQuitterApp.Size = new System.Drawing.Size(190, 42);
             this.btnQuitterApp.TabIndex = 9;
-            this.btnQuitterApp.Text = "Quitter";
+            this.btnQuitterApp.Text = "> Quitter";
             this.btnQuitterApp.UseVisualStyleBackColor = true;
             this.btnQuitterApp.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -103,9 +105,23 @@ namespace AppSenAgriculture
             this.btnDeconnexion.Name = "btnDeconnexion";
             this.btnDeconnexion.Size = new System.Drawing.Size(190, 42);
             this.btnDeconnexion.TabIndex = 8;
-            this.btnDeconnexion.Text = "Se deconnecter";
+            this.btnDeconnexion.Text = "> Se deconnecter";
             this.btnDeconnexion.UseVisualStyleBackColor = true;
             this.btnDeconnexion.Click += new System.EventHandler(this.seDeToolStripMenuItem_Click);
+            // 
+            // btnAccueil
+            // 
+            this.btnAccueil.FlatAppearance.BorderSize = 0;
+            this.btnAccueil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAccueil.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
+            this.btnAccueil.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.btnAccueil.Location = new System.Drawing.Point(20, 137);
+            this.btnAccueil.Name = "btnAccueil";
+            this.btnAccueil.Size = new System.Drawing.Size(190, 42);
+            this.btnAccueil.TabIndex = 2;
+            this.btnAccueil.Text = "> Accueil";
+            this.btnAccueil.UseVisualStyleBackColor = true;
+            this.btnAccueil.Click += new System.EventHandler(this.btnAccueil_Click);
             // 
             // btnStock
             // 
@@ -113,11 +129,11 @@ namespace AppSenAgriculture
             this.btnStock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStock.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnStock.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnStock.Location = new System.Drawing.Point(20, 377);
+            this.btnStock.Location = new System.Drawing.Point(20, 425);
             this.btnStock.Name = "btnStock";
             this.btnStock.Size = new System.Drawing.Size(190, 42);
-            this.btnStock.TabIndex = 7;
-            this.btnStock.Text = "Stock";
+            this.btnStock.TabIndex = 8;
+            this.btnStock.Text = "> Stock";
             this.btnStock.UseVisualStyleBackColor = true;
             this.btnStock.Click += new System.EventHandler(this.stockToolStripMenuItem_Click);
             // 
@@ -127,11 +143,11 @@ namespace AppSenAgriculture
             this.btnCommande.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCommande.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnCommande.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnCommande.Location = new System.Drawing.Point(20, 329);
+            this.btnCommande.Location = new System.Drawing.Point(20, 377);
             this.btnCommande.Name = "btnCommande";
             this.btnCommande.Size = new System.Drawing.Size(190, 42);
-            this.btnCommande.TabIndex = 6;
-            this.btnCommande.Text = "Commandes";
+            this.btnCommande.TabIndex = 7;
+            this.btnCommande.Text = "> Commandes";
             this.btnCommande.UseVisualStyleBackColor = true;
             this.btnCommande.Click += new System.EventHandler(this.commandeToolStripMenuItem_Click);
             // 
@@ -141,11 +157,11 @@ namespace AppSenAgriculture
             this.btnClient.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClient.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnClient.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnClient.Location = new System.Drawing.Point(20, 281);
+            this.btnClient.Location = new System.Drawing.Point(20, 329);
             this.btnClient.Name = "btnClient";
             this.btnClient.Size = new System.Drawing.Size(190, 42);
-            this.btnClient.TabIndex = 5;
-            this.btnClient.Text = "Clients";
+            this.btnClient.TabIndex = 6;
+            this.btnClient.Text = "> Clients";
             this.btnClient.UseVisualStyleBackColor = true;
             this.btnClient.Click += new System.EventHandler(this.clientToolStripMenuItem_Click);
             // 
@@ -155,11 +171,11 @@ namespace AppSenAgriculture
             this.btnLieu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLieu.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnLieu.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnLieu.Location = new System.Drawing.Point(20, 233);
+            this.btnLieu.Location = new System.Drawing.Point(20, 281);
             this.btnLieu.Name = "btnLieu";
             this.btnLieu.Size = new System.Drawing.Size(190, 42);
-            this.btnLieu.TabIndex = 4;
-            this.btnLieu.Text = "Lieux";
+            this.btnLieu.TabIndex = 5;
+            this.btnLieu.Text = "> Lieux";
             this.btnLieu.UseVisualStyleBackColor = true;
             this.btnLieu.Click += new System.EventHandler(this.lieuToolStripMenuItem_Click);
             // 
@@ -169,11 +185,11 @@ namespace AppSenAgriculture
             this.btnCategorie.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCategorie.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnCategorie.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnCategorie.Location = new System.Drawing.Point(20, 185);
+            this.btnCategorie.Location = new System.Drawing.Point(20, 233);
             this.btnCategorie.Name = "btnCategorie";
             this.btnCategorie.Size = new System.Drawing.Size(190, 42);
-            this.btnCategorie.TabIndex = 3;
-            this.btnCategorie.Text = "Categories";
+            this.btnCategorie.TabIndex = 4;
+            this.btnCategorie.Text = "> Categories";
             this.btnCategorie.UseVisualStyleBackColor = true;
             this.btnCategorie.Click += new System.EventHandler(this.cToolStripMenuItem_Click);
             // 
@@ -183,11 +199,11 @@ namespace AppSenAgriculture
             this.btnProduit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProduit.Font = new System.Drawing.Font("Source Sans 3", 12F, System.Drawing.FontStyle.Bold);
             this.btnProduit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
-            this.btnProduit.Location = new System.Drawing.Point(20, 137);
+            this.btnProduit.Location = new System.Drawing.Point(20, 185);
             this.btnProduit.Name = "btnProduit";
             this.btnProduit.Size = new System.Drawing.Size(190, 42);
-            this.btnProduit.TabIndex = 2;
-            this.btnProduit.Text = "Produits";
+            this.btnProduit.TabIndex = 3;
+            this.btnProduit.Text = "> Produits";
             this.btnProduit.UseVisualStyleBackColor = true;
             this.btnProduit.Click += new System.EventHandler(this.produitToolStripMenuItem_Click);
             // 
@@ -395,6 +411,7 @@ namespace AppSenAgriculture
         private System.Windows.Forms.Button btnLieu;
         private System.Windows.Forms.Button btnCategorie;
         private System.Windows.Forms.Button btnProduit;
+        private System.Windows.Forms.Button btnAccueil;
         private System.Windows.Forms.Label lblSidebarCaption;
         private System.Windows.Forms.Label lblSidebarTitle;
         private System.Windows.Forms.Panel pnlTopBar;
