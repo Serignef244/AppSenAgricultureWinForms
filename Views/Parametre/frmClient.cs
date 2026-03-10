@@ -20,17 +20,14 @@ namespace AppSenAgriculture.Views.Parametre
 
         private void ApplyVisualStyle()
         {
-            BackColor = Color.FromArgb(245, 240, 232);
-            ForeColor = Color.FromArgb(44, 24, 16);
-            Font = new Font("Source Sans 3", 12F);
-
+            AppTheme.ApplyFormTheme(this);
             StyleInputs(this);
-            StyleActionButton(btnAjouter, Color.FromArgb(45, 80, 22), Color.White);
-            StyleActionButton(btnModifier, Color.FromArgb(196, 137, 42), Color.White);
-            StyleActionButton(btnSupprimer, Color.FromArgb(140, 54, 32), Color.White);
-            StyleActionButton(btnSelectionner, Color.White, Color.FromArgb(44, 24, 16));
-            StyleActionButton(btnReinitialiser, Color.White, Color.FromArgb(44, 24, 16));
-            StyleGrid(dgClients);
+            AppTheme.StyleButton(btnAjouter, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnModifier, AppTheme.Ochre, Color.White);
+            AppTheme.StyleButton(btnSupprimer, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnSelectionner, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleButton(btnReinitialiser, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleGrid(dgClients);
         }
 
         private void StyleInputs(Control parent)
@@ -42,46 +39,13 @@ namespace AppSenAgriculture.Views.Parametre
 
                 if (textBox != null)
                 {
-                    textBox.BackColor = Color.White;
-                    textBox.BorderStyle = BorderStyle.FixedSingle;
-                    textBox.Font = new Font("Source Sans 3", 12F);
+                    AppTheme.StyleInput(textBox);
                 }
                 else if (label != null)
                 {
-                    label.Font = new Font("Source Sans 3", 12F, FontStyle.Bold);
-                    label.ForeColor = Color.FromArgb(44, 24, 16);
+                    AppTheme.StyleLabel(label);
                 }
             }
-        }
-
-        private void StyleActionButton(Button button, Color backColor, Color foreColor)
-        {
-            button.BackColor = backColor;
-            button.ForeColor = foreColor;
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderColor = Color.FromArgb(196, 137, 42);
-            button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
-            button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            button.Height = 38;
-        }
-
-        private void StyleGrid(DataGridView grid)
-        {
-            grid.BackgroundColor = Color.White;
-            grid.BorderStyle = BorderStyle.None;
-            grid.EnableHeadersVisualStyles = false;
-            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 80, 22);
-            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            grid.DefaultCellStyle.Font = new Font("JetBrains Mono", 10F);
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 137, 42);
-            grid.DefaultCellStyle.SelectionForeColor = Color.White;
-            grid.DefaultCellStyle.BackColor = Color.White;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 240, 232);
-            grid.RowHeadersVisible = false;
-            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            grid.GridColor = Color.FromArgb(230, 220, 204);
         }
 
         protected override void OnLoad(EventArgs e)

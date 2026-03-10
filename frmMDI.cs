@@ -43,13 +43,13 @@ namespace AppSenAgriculture
             foreach (Button button in buttons)
             {
                 button.BackColor = Color.Transparent;
-                button.ForeColor = Color.FromArgb(245, 240, 232);
-                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(45, 80, 22);
+                button.ForeColor = AppTheme.WarmCream;
+                button.FlatAppearance.MouseOverBackColor = AppTheme.SavannaGreen;
             }
 
             if (activeButton != null)
             {
-                activeButton.BackColor = Color.FromArgb(232, 101, 26);
+                activeButton.BackColor = AppTheme.BaobabOrange;
                 activeButton.ForeColor = Color.White;
             }
 
@@ -184,7 +184,7 @@ namespace AppSenAgriculture
                 MdiClient client = control as MdiClient;
                 if (client != null)
                 {
-                    client.BackColor = Color.FromArgb(245, 240, 232);
+                    client.BackColor = AppTheme.WarmCream;
                     break;
                 }
             }

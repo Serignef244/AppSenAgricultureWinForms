@@ -20,9 +20,7 @@ namespace AppSenAgriculture.Views.Stock
 
         private void ApplyVisualStyle()
         {
-            BackColor = Color.FromArgb(245, 240, 232);
-            ForeColor = Color.FromArgb(44, 24, 16);
-            Font = new Font("Source Sans 3", 12F);
+            AppTheme.ApplyFormTheme(this);
 
             foreach (Control control in Controls)
             {
@@ -32,50 +30,21 @@ namespace AppSenAgriculture.Views.Stock
 
                 if (textBox != null)
                 {
-                    textBox.BackColor = Color.White;
-                    textBox.BorderStyle = BorderStyle.FixedSingle;
-                    textBox.Font = new Font("Source Sans 3", 12F);
+                    AppTheme.StyleInput(textBox);
                 }
                 else if (comboBox != null)
                 {
-                    comboBox.FlatStyle = FlatStyle.Flat;
-                    comboBox.Font = new Font("Source Sans 3", 12F);
-                    comboBox.BackColor = Color.White;
+                    AppTheme.StyleComboBox(comboBox);
                 }
                 else if (label != null)
                 {
-                    label.Font = new Font("Source Sans 3", 12F, FontStyle.Bold);
-                    label.ForeColor = Color.FromArgb(44, 24, 16);
+                    AppTheme.StyleLabel(label);
                 }
             }
 
-            btnApprovisionner.BackColor = Color.FromArgb(45, 80, 22);
-            btnApprovisionner.ForeColor = Color.White;
-            btnApprovisionner.FlatStyle = FlatStyle.Flat;
-            btnApprovisionner.FlatAppearance.BorderSize = 0;
-            btnApprovisionner.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            btnApprovisionner.Height = 38;
+            AppTheme.StyleButton(btnApprovisionner, AppTheme.SavannaGreen, Color.White);
 
-            StyleGrid(dgStock);
-        }
-
-        private void StyleGrid(DataGridView grid)
-        {
-            grid.BackgroundColor = Color.White;
-            grid.BorderStyle = BorderStyle.None;
-            grid.EnableHeadersVisualStyles = false;
-            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 80, 22);
-            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            grid.DefaultCellStyle.Font = new Font("JetBrains Mono", 10F);
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 137, 42);
-            grid.DefaultCellStyle.SelectionForeColor = Color.White;
-            grid.DefaultCellStyle.BackColor = Color.White;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 240, 232);
-            grid.RowHeadersVisible = false;
-            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            grid.GridColor = Color.FromArgb(230, 220, 204);
+            AppTheme.StyleGrid(dgStock);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -196,8 +165,8 @@ namespace AppSenAgriculture.Views.Stock
                 .FirstOrDefault() ?? 0;
             lblQuantiteDisponible.Text = "Stock disponible: " + disponible;
             lblQuantiteDisponible.ForeColor = disponible <= 5
-                ? Color.FromArgb(232, 101, 26)
-                : Color.FromArgb(90, 138, 46);
+                ? AppTheme.BaobabOrange
+                : AppTheme.FreshGreen;
         }
 
         private bool LireSaisie(out int quantite)

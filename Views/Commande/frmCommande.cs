@@ -20,15 +20,12 @@ namespace AppSenAgriculture.Views.Commande
 
         private void ApplyVisualStyle()
         {
-            BackColor = Color.FromArgb(245, 240, 232);
-            ForeColor = Color.FromArgb(44, 24, 16);
-            Font = new Font("Source Sans 3", 12F);
-
+            AppTheme.ApplyFormTheme(this);
             StyleInputs(this);
-            StyleActionButton(btnNouvelleCommande, Color.FromArgb(45, 80, 22), Color.White);
-            StyleActionButton(btnSupprimerCommande, Color.FromArgb(140, 54, 32), Color.White);
-            StyleActionButton(btnDetailsCommande, Color.FromArgb(196, 137, 42), Color.White);
-            StyleGrid(dgCommandes);
+            AppTheme.StyleButton(btnNouvelleCommande, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnSupprimerCommande, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnDetailsCommande, AppTheme.Ochre, Color.White);
+            AppTheme.StyleGrid(dgCommandes);
             dgCommandes.CellFormatting += dgCommandes_CellFormatting;
         }
 
@@ -43,57 +40,22 @@ namespace AppSenAgriculture.Views.Commande
 
                 if (textBox != null)
                 {
-                    textBox.BackColor = Color.White;
-                    textBox.BorderStyle = BorderStyle.FixedSingle;
-                    textBox.Font = new Font("Source Sans 3", 12F);
+                    AppTheme.StyleInput(textBox);
                 }
                 else if (comboBox != null)
                 {
-                    comboBox.FlatStyle = FlatStyle.Flat;
-                    comboBox.Font = new Font("Source Sans 3", 12F);
-                    comboBox.BackColor = Color.White;
+                    AppTheme.StyleComboBox(comboBox);
                 }
                 else if (label != null)
                 {
-                    label.Font = new Font("Source Sans 3", 12F, FontStyle.Bold);
-                    label.ForeColor = Color.FromArgb(44, 24, 16);
+                    AppTheme.StyleLabel(label);
                 }
                 else if (datePicker != null)
                 {
-                    datePicker.Font = new Font("Source Sans 3", 11F);
+                    datePicker.Font = AppTheme.UiFont(11F);
                     datePicker.CalendarMonthBackground = Color.White;
                 }
             }
-        }
-
-        private void StyleActionButton(Button button, Color backColor, Color foreColor)
-        {
-            button.BackColor = backColor;
-            button.ForeColor = foreColor;
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderColor = Color.FromArgb(196, 137, 42);
-            button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
-            button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            button.Height = 38;
-        }
-
-        private void StyleGrid(DataGridView grid)
-        {
-            grid.BackgroundColor = Color.White;
-            grid.BorderStyle = BorderStyle.None;
-            grid.EnableHeadersVisualStyles = false;
-            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 80, 22);
-            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
-            grid.DefaultCellStyle.Font = new Font("JetBrains Mono", 10F);
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 137, 42);
-            grid.DefaultCellStyle.SelectionForeColor = Color.White;
-            grid.DefaultCellStyle.BackColor = Color.White;
-            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 240, 232);
-            grid.RowHeadersVisible = false;
-            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            grid.GridColor = Color.FromArgb(230, 220, 204);
         }
 
         private void dgCommandes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -106,12 +68,12 @@ namespace AppSenAgriculture.Views.Commande
             string statut = e.Value.ToString();
             if (string.Equals(statut, "Validee", StringComparison.Ordinal))
             {
-                e.CellStyle.BackColor = Color.FromArgb(90, 138, 46);
+                e.CellStyle.BackColor = AppTheme.FreshGreen;
                 e.CellStyle.ForeColor = Color.White;
             }
             else
             {
-                e.CellStyle.BackColor = Color.FromArgb(232, 101, 26);
+                e.CellStyle.BackColor = AppTheme.BaobabOrange;
                 e.CellStyle.ForeColor = Color.White;
             }
 
