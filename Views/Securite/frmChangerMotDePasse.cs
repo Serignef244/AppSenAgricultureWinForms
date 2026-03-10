@@ -2,6 +2,7 @@ using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AppSenAgriculture.Views.Securite
@@ -15,6 +16,24 @@ namespace AppSenAgriculture.Views.Securite
         {
             _idClient = idClient;
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            lblTitle.Font = AppTheme.TitleFont(18F);
+            lblTitle.ForeColor = AppTheme.Anthracite;
+            lblPolicy.Font = AppTheme.UiFont(10.5F);
+            lblPolicy.ForeColor = AppTheme.MutedText;
+
+            AppTheme.StyleLabel(lblAncienMotDePasse);
+            AppTheme.StyleLabel(lblNouveauMotDePasse);
+            AppTheme.StyleLabel(lblConfirmerMotDePasse);
+            AppTheme.StyleInput(txtAncienMotDePasse);
+            AppTheme.StyleInput(txtNouveauMotDePasse);
+            AppTheme.StyleInput(txtConfirmerMotDePasse);
+            AppTheme.StyleButton(btnValider, AppTheme.SavannaGreen, Color.White);
         }
 
         protected override void OnLoad(EventArgs e)
