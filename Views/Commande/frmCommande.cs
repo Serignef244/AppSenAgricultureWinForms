@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -14,6 +15,64 @@ namespace AppSenAgriculture.Views.Commande
         public frmCommande()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            BackColor = Color.FromArgb(245, 240, 232);
+            ForeColor = Color.FromArgb(44, 24, 16);
+            Font = new Font("Source Sans 3", 12F);
+
+            StyleInputs(this);
+            StyleActionButton(btnNouvelleCommande, Color.FromArgb(45, 80, 22), Color.White);
+            StyleActionButton(btnSupprimerCommande, Color.FromArgb(140, 54, 32), Color.White);
+            StyleActionButton(btnDetailsCommande, Color.FromArgb(196, 137, 42), Color.White);
+        }
+
+        private void StyleInputs(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                ComboBox comboBox = control as ComboBox;
+                Label label = control as Label;
+                DateTimePicker datePicker = control as DateTimePicker;
+
+                if (textBox != null)
+                {
+                    textBox.BackColor = Color.White;
+                    textBox.BorderStyle = BorderStyle.FixedSingle;
+                    textBox.Font = new Font("Source Sans 3", 12F);
+                }
+                else if (comboBox != null)
+                {
+                    comboBox.FlatStyle = FlatStyle.Flat;
+                    comboBox.Font = new Font("Source Sans 3", 12F);
+                    comboBox.BackColor = Color.White;
+                }
+                else if (label != null)
+                {
+                    label.Font = new Font("Source Sans 3", 12F, FontStyle.Bold);
+                    label.ForeColor = Color.FromArgb(44, 24, 16);
+                }
+                else if (datePicker != null)
+                {
+                    datePicker.Font = new Font("Source Sans 3", 11F);
+                    datePicker.CalendarMonthBackground = Color.White;
+                }
+            }
+        }
+
+        private void StyleActionButton(Button button, Color backColor, Color foreColor)
+        {
+            button.BackColor = backColor;
+            button.ForeColor = foreColor;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = Color.FromArgb(196, 137, 42);
+            button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
+            button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
+            button.Height = 38;
         }
 
         protected override void OnLoad(EventArgs e)

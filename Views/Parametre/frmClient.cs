@@ -2,6 +2,7 @@ using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -14,6 +15,53 @@ namespace AppSenAgriculture.Views.Parametre
         public frmClient()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            BackColor = Color.FromArgb(245, 240, 232);
+            ForeColor = Color.FromArgb(44, 24, 16);
+            Font = new Font("Source Sans 3", 12F);
+
+            StyleInputs(this);
+            StyleActionButton(btnAjouter, Color.FromArgb(45, 80, 22), Color.White);
+            StyleActionButton(btnModifier, Color.FromArgb(196, 137, 42), Color.White);
+            StyleActionButton(btnSupprimer, Color.FromArgb(140, 54, 32), Color.White);
+            StyleActionButton(btnSelectionner, Color.White, Color.FromArgb(44, 24, 16));
+            StyleActionButton(btnReinitialiser, Color.White, Color.FromArgb(44, 24, 16));
+        }
+
+        private void StyleInputs(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                Label label = control as Label;
+
+                if (textBox != null)
+                {
+                    textBox.BackColor = Color.White;
+                    textBox.BorderStyle = BorderStyle.FixedSingle;
+                    textBox.Font = new Font("Source Sans 3", 12F);
+                }
+                else if (label != null)
+                {
+                    label.Font = new Font("Source Sans 3", 12F, FontStyle.Bold);
+                    label.ForeColor = Color.FromArgb(44, 24, 16);
+                }
+            }
+        }
+
+        private void StyleActionButton(Button button, Color backColor, Color foreColor)
+        {
+            button.BackColor = backColor;
+            button.ForeColor = foreColor;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = Color.FromArgb(196, 137, 42);
+            button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
+            button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
+            button.Height = 38;
         }
 
         protected override void OnLoad(EventArgs e)
