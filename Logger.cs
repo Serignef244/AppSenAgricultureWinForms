@@ -8,6 +8,15 @@ namespace AppSenAgriculture
         private static readonly string LogDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
         private static readonly object LockObject = new object();
 
+        private static string FormatExceptionDetails(Exception ex)
+        {
+            if (ex == null) return string.Empty;
+
+            // ex.ToString() inclut déjà message + stack trace + inner exceptions,
+            // mais on ajoute un séparateur pour la lisibilité.
+            return ex.ToString();
+        }
+
         /// <summary>
         /// Logs an exception to a daily text file.
         /// </summary>
@@ -15,13 +24,15 @@ namespace AppSenAgriculture
         {
             if (ex == null) return;
 
+            string details = FormatExceptionDetails(ex);
             string logEntry = string.Format(
-                "[{0}] [ERROR] CONTEXT: {1}\nTYPE: {2}\nMESSAGE: {3}\nSTACK TRACE: {4}\n{5}\n",
+                "[{0}] [ERROR] CONTEXT: {1}\nTYPE: {2}\nMESSAGE: {3}\nSTACK TRACE: {4}\nDETAILS: {5}\n{6}\n",
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 context ?? "N/A",
                 ex.GetType().FullName,
                 ex.Message,
                 ex.StackTrace,
+                details,
                 new string('-', 80)
             );
 

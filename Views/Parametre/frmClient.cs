@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
+using AppSenAgriculture.Services;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -149,6 +150,7 @@ namespace AppSenAgriculture.Views.Parametre
                     return;
                 }
 
+                string emailClient = txtEmail.Text.Trim();
                 string identifiant = txtIdentifiant.Text.Trim();
                 if (!IdentifiantDisponible(identifiant, null))
                 {
@@ -157,7 +159,7 @@ namespace AppSenAgriculture.Views.Parametre
                     return;
                 }
 
-                string motDePasseTemporaire = "passer";
+                string motDePasseTemporaire = PasswordSecurity.GenerateTemporaryPassword();
 
                 string passwordHash = PasswordSecurity.HashPassword(motDePasseTemporaire);
 
@@ -165,7 +167,7 @@ namespace AppSenAgriculture.Views.Parametre
                 {
                     NomCompletPersonne = txtNom.Text.Trim(),
                     AddressePersonne = txtAdresse.Text.Trim(),
-                    EmailPersonne = txtEmail.Text.Trim(),
+                    EmailPersonne = emailClient,
                     TelPersonne = txtTelephone.Text.Trim(),
                     IdentifiantPersonne = identifiant,
                     MotDePassePersonne = passwordHash,
@@ -176,14 +178,31 @@ namespace AppSenAgriculture.Views.Parametre
                 db.SaveChanges();
 
                 ChargerClients();
+
+                try
+                {
+                    EmailService.SendTemporaryPassword(emailClient, motDePasseTemporaire);
+                    MessageBox.Show(
+                        "Client cree avec succes.\nUn email contenant le mot de passe temporaire a ete envoye au client.\nLe client devra le changer a la premiere connexion.",
+                        "Client",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+                catch (Exception mailEx)
+                {
+                    Logger.WriteLog(mailEx, "frmClient.btnAjouter_Click.EmailSend");
+                    MessageBox.Show(
+                        "Client cree avec succes, mais l'envoi de l'email a echoue.\n\n"
+                        + "Mot de passe temporaire: " + motDePasseTemporaire + "\n\n"
+                        + "Details: " + mailEx.Message,
+                        "Client",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+
                 ReinitialiserFormulaire();
-                MessageBox.Show(
-                    "Client cree avec succes.\nMot de passe temporaire: " + motDePasseTemporaire
-                    + "\nLe client devra le changer a la premiere connexion.",
-                    "Client",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
             }
             catch (Exception ex)
             {
