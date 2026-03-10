@@ -28,20 +28,16 @@ namespace AppSenAgriculture.Views.Securite
             {
                 using (var db = new BdSenAgricultureContext())
                 {
-                    // Chercher l'utilisateur par son email
                     var utilisateur = db.Personnes.FirstOrDefault(p => p.EmailPersonne == email);
 
                     if (utilisateur == null)
                     {
-                        // Pour des raisons de sécurité, on ne dit pas si l'email existe ou non, 
-                        // mais ici pour une app métier, on peut être plus explicite ou rester vague.
-                        // Restons vague mais pro.
+                        
                         MessageBox.Show("Si cet email correspond à un compte, un nouveau mot de passe a été envoyé.", "Mot de passe oublié", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.Close();
                         return;
                     }
 
-                    // Générer un mot de passe temporaire
                     string tempPwd = PasswordSecurity.GenerateTemporaryPassword();
 
                     // Mettre à jour l'utilisateur
