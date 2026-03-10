@@ -41,8 +41,23 @@ namespace AppSenAgriculture
             this.pnlTopBar = new System.Windows.Forms.Panel();
             this.lblTopSubtitle = new System.Windows.Forms.Label();
             this.lblTopTitle = new System.Windows.Forms.Label();
+            this.pnlDashboard = new System.Windows.Forms.Panel();
+            this.cardClients = new System.Windows.Forms.Panel();
+            this.lblClientsValue = new System.Windows.Forms.Label();
+            this.lblClientsCaption = new System.Windows.Forms.Label();
+            this.cardCommandes = new System.Windows.Forms.Panel();
+            this.lblCommandesValue = new System.Windows.Forms.Label();
+            this.lblCommandesCaption = new System.Windows.Forms.Label();
+            this.cardStock = new System.Windows.Forms.Panel();
+            this.lblStockValue = new System.Windows.Forms.Label();
+            this.lblStockCaption = new System.Windows.Forms.Label();
+            this.lblDashboardHint = new System.Windows.Forms.Label();
             this.pnlSidebar.SuspendLayout();
             this.pnlTopBar.SuspendLayout();
+            this.pnlDashboard.SuspendLayout();
+            this.cardClients.SuspendLayout();
+            this.cardCommandes.SuspendLayout();
+            this.cardStock.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlSidebar
@@ -231,6 +246,113 @@ namespace AppSenAgriculture
             this.lblTopTitle.TabIndex = 0;
             this.lblTopTitle.Text = "Tableau de bord";
             // 
+            // pnlDashboard
+            // 
+            this.pnlDashboard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
+            this.pnlDashboard.Controls.Add(this.cardClients);
+            this.pnlDashboard.Controls.Add(this.cardCommandes);
+            this.pnlDashboard.Controls.Add(this.cardStock);
+            this.pnlDashboard.Controls.Add(this.lblDashboardHint);
+            this.pnlDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlDashboard.Location = new System.Drawing.Point(230, 78);
+            this.pnlDashboard.Name = "pnlDashboard";
+            this.pnlDashboard.Padding = new System.Windows.Forms.Padding(28);
+            this.pnlDashboard.Size = new System.Drawing.Size(837, 583);
+            this.pnlDashboard.TabIndex = 2;
+            // 
+            // cardClients
+            // 
+            this.cardClients.BackColor = System.Drawing.Color.White;
+            this.cardClients.Controls.Add(this.lblClientsValue);
+            this.cardClients.Controls.Add(this.lblClientsCaption);
+            this.cardClients.Location = new System.Drawing.Point(562, 79);
+            this.cardClients.Name = "cardClients";
+            this.cardClients.Size = new System.Drawing.Size(220, 145);
+            this.cardClients.TabIndex = 3;
+            // 
+            // lblClientsValue
+            // 
+            this.lblClientsValue.AutoSize = true;
+            this.lblClientsValue.Location = new System.Drawing.Point(22, 66);
+            this.lblClientsValue.Name = "lblClientsValue";
+            this.lblClientsValue.Size = new System.Drawing.Size(36, 20);
+            this.lblClientsValue.TabIndex = 1;
+            this.lblClientsValue.Text = "0/0";
+            // 
+            // lblClientsCaption
+            // 
+            this.lblClientsCaption.AutoSize = true;
+            this.lblClientsCaption.Location = new System.Drawing.Point(22, 27);
+            this.lblClientsCaption.Name = "lblClientsCaption";
+            this.lblClientsCaption.Size = new System.Drawing.Size(125, 20);
+            this.lblClientsCaption.TabIndex = 0;
+            this.lblClientsCaption.Text = "Clients actifs total";
+            // 
+            // cardCommandes
+            // 
+            this.cardCommandes.BackColor = System.Drawing.Color.White;
+            this.cardCommandes.Controls.Add(this.lblCommandesValue);
+            this.cardCommandes.Controls.Add(this.lblCommandesCaption);
+            this.cardCommandes.Location = new System.Drawing.Point(296, 79);
+            this.cardCommandes.Name = "cardCommandes";
+            this.cardCommandes.Size = new System.Drawing.Size(220, 145);
+            this.cardCommandes.TabIndex = 2;
+            // 
+            // lblCommandesValue
+            // 
+            this.lblCommandesValue.AutoSize = true;
+            this.lblCommandesValue.Location = new System.Drawing.Point(22, 66);
+            this.lblCommandesValue.Name = "lblCommandesValue";
+            this.lblCommandesValue.Size = new System.Drawing.Size(57, 20);
+            this.lblCommandesValue.TabIndex = 1;
+            this.lblCommandesValue.Text = "0 / jour";
+            // 
+            // lblCommandesCaption
+            // 
+            this.lblCommandesCaption.AutoSize = true;
+            this.lblCommandesCaption.Location = new System.Drawing.Point(22, 27);
+            this.lblCommandesCaption.Name = "lblCommandesCaption";
+            this.lblCommandesCaption.Size = new System.Drawing.Size(123, 20);
+            this.lblCommandesCaption.TabIndex = 0;
+            this.lblCommandesCaption.Text = "Commandes du jour";
+            // 
+            // cardStock
+            // 
+            this.cardStock.BackColor = System.Drawing.Color.White;
+            this.cardStock.Controls.Add(this.lblStockValue);
+            this.cardStock.Controls.Add(this.lblStockCaption);
+            this.cardStock.Location = new System.Drawing.Point(30, 79);
+            this.cardStock.Name = "cardStock";
+            this.cardStock.Size = new System.Drawing.Size(220, 145);
+            this.cardStock.TabIndex = 1;
+            // 
+            // lblStockValue
+            // 
+            this.lblStockValue.AutoSize = true;
+            this.lblStockValue.Location = new System.Drawing.Point(22, 66);
+            this.lblStockValue.Name = "lblStockValue";
+            this.lblStockValue.Size = new System.Drawing.Size(84, 20);
+            this.lblStockValue.TabIndex = 1;
+            this.lblStockValue.Text = "0 critiques";
+            // 
+            // lblStockCaption
+            // 
+            this.lblStockCaption.AutoSize = true;
+            this.lblStockCaption.Location = new System.Drawing.Point(22, 27);
+            this.lblStockCaption.Name = "lblStockCaption";
+            this.lblStockCaption.Size = new System.Drawing.Size(118, 20);
+            this.lblStockCaption.TabIndex = 0;
+            this.lblStockCaption.Text = "Stock critique bas";
+            // 
+            // lblDashboardHint
+            // 
+            this.lblDashboardHint.AutoSize = true;
+            this.lblDashboardHint.Location = new System.Drawing.Point(31, 30);
+            this.lblDashboardHint.Name = "lblDashboardHint";
+            this.lblDashboardHint.Size = new System.Drawing.Size(379, 20);
+            this.lblDashboardHint.TabIndex = 0;
+            this.lblDashboardHint.Text = "Vue d'ensemble des indicateurs clefs avant ouverture d'un module";
+            // 
             // frmMDI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -238,6 +360,7 @@ namespace AppSenAgriculture
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(240)))), ((int)(((byte)(232)))));
             this.ClientSize = new System.Drawing.Size(1067, 661);
             this.ControlBox = false;
+            this.Controls.Add(this.pnlDashboard);
             this.Controls.Add(this.pnlTopBar);
             this.Controls.Add(this.pnlSidebar);
             this.Font = new System.Drawing.Font("Source Sans 3", 12F);
@@ -249,6 +372,14 @@ namespace AppSenAgriculture
             this.pnlSidebar.PerformLayout();
             this.pnlTopBar.ResumeLayout(false);
             this.pnlTopBar.PerformLayout();
+            this.pnlDashboard.ResumeLayout(false);
+            this.pnlDashboard.PerformLayout();
+            this.cardClients.ResumeLayout(false);
+            this.cardClients.PerformLayout();
+            this.cardCommandes.ResumeLayout(false);
+            this.cardCommandes.PerformLayout();
+            this.cardStock.ResumeLayout(false);
+            this.cardStock.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -269,5 +400,16 @@ namespace AppSenAgriculture
         private System.Windows.Forms.Panel pnlTopBar;
         private System.Windows.Forms.Label lblTopSubtitle;
         private System.Windows.Forms.Label lblTopTitle;
+        private System.Windows.Forms.Panel pnlDashboard;
+        private System.Windows.Forms.Panel cardClients;
+        private System.Windows.Forms.Label lblClientsValue;
+        private System.Windows.Forms.Label lblClientsCaption;
+        private System.Windows.Forms.Panel cardCommandes;
+        private System.Windows.Forms.Label lblCommandesValue;
+        private System.Windows.Forms.Label lblCommandesCaption;
+        private System.Windows.Forms.Panel cardStock;
+        private System.Windows.Forms.Label lblStockValue;
+        private System.Windows.Forms.Label lblStockCaption;
+        private System.Windows.Forms.Label lblDashboardHint;
     }
 }

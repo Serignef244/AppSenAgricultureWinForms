@@ -1,4 +1,5 @@
 using AppSenAgriculture.Views.Commande;
+using AppSenAgriculture.Models;
 using AppSenAgriculture.Views.Parametre;
 using AppSenAgriculture.Views.Stock;
 using Microsoft.VisualBasic.Devices;
@@ -57,11 +58,54 @@ namespace AppSenAgriculture
             lblTopTitle.Text = title;
         }
 
+        private void ShowDashboard(bool visible)
+        {
+            pnlDashboard.Visible = visible;
+            if (visible)
+            {
+                lblTopTitle.Text = "Tableau de bord";
+                lblTopSubtitle.Text = "Pilotage des produits, clients, commandes et stock";
+            }
+        }
+
+        private void RefreshDashboardMetrics()
+        {
+            try
+            {
+                using (var db = new BdSenAgricultureContext())
+                {
+                    DateTime today = DateTime.Today;
+                    DateTime tomorrow = today.AddDays(1);
+
+                    int stockCritique = db.Stocks.Count(s => s.QuanteStock <= 5);
+                    int commandesJour = db.Commandes.Count(c => c.DateCommande >= today && c.DateCommande < tomorrow);
+                    int clientsTotal = db.Clients.Count();
+                    int clientsActifs = db.Commandes
+                        .Where(c => c.IdClient.HasValue)
+                        .Select(c => c.IdClient.Value)
+                        .Distinct()
+                        .Count();
+
+                    lblStockValue.Text = stockCritique.ToString() + " critiques";
+                    lblCommandesValue.Text = commandesJour.ToString() + " / jour";
+                    lblClientsValue.Text = clientsActifs.ToString() + " / " + clientsTotal.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex, "frmMDI.RefreshDashboardMetrics");
+                lblStockValue.Text = "-";
+                lblCommandesValue.Text = "-";
+                lblClientsValue.Text = "-";
+            }
+        }
+
         private void produitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmProduit f = new frmProduit();
                 f.MdiParent = this;
                 f.Show();
@@ -91,6 +135,7 @@ namespace AppSenAgriculture
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmCategorie f = new frmCategorie();
                 f.MdiParent = this;
                 f.Show();
@@ -108,6 +153,7 @@ namespace AppSenAgriculture
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmLieu f = new frmLieu();
                 f.MdiParent = this;
                 f.Show();
@@ -125,6 +171,7 @@ namespace AppSenAgriculture
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmClient f = new frmClient();
                 f.MdiParent = this;
                 f.Show();
@@ -142,6 +189,7 @@ namespace AppSenAgriculture
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmCommande f = new frmCommande();
                 f.MdiParent = this;
                 f.Show();
@@ -159,6 +207,7 @@ namespace AppSenAgriculture
             try
             {
                 fermer();
+                ShowDashboard(false);
                 frmStock f = new frmStock();
                 f.MdiParent = this;
                 f.Show();
@@ -189,6 +238,23 @@ namespace AppSenAgriculture
                 }
             }
 
+            cardStock.BackColor = Color.White;
+            cardCommandes.BackColor = Color.White;
+            cardClients.BackColor = Color.White;
+            lblDashboardHint.Font = AppTheme.UiFont(11F);
+            lblDashboardHint.ForeColor = AppTheme.MutedText;
+            lblStockCaption.Font = AppTheme.UiFont(11F, FontStyle.Bold);
+            lblCommandesCaption.Font = AppTheme.UiFont(11F, FontStyle.Bold);
+            lblClientsCaption.Font = AppTheme.UiFont(11F, FontStyle.Bold);
+            lblStockValue.Font = AppTheme.TitleFont(18F);
+            lblCommandesValue.Font = AppTheme.TitleFont(18F);
+            lblClientsValue.Font = AppTheme.TitleFont(18F);
+            lblStockValue.ForeColor = AppTheme.BaobabOrange;
+            lblCommandesValue.ForeColor = AppTheme.SavannaGreen;
+            lblClientsValue.ForeColor = AppTheme.Anthracite;
+
+            RefreshDashboardMetrics();
+            ShowDashboard(true);
             SetActiveNavigation(_activeNavigationButton, "Tableau de bord");
         }
     }
