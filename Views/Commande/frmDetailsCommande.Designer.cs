@@ -43,7 +43,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblHeader
             // 
             this.lblHeader.AutoSize = true;
-            this.lblHeader.Location = new System.Drawing.Point(20, 15);
+            this.lblHeader.Location = new System.Drawing.Point(24, 20);
             this.lblHeader.Name = "lblHeader";
             this.lblHeader.Size = new System.Drawing.Size(289, 13);
             this.lblHeader.TabIndex = 0;
@@ -52,7 +52,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblMeta
             // 
             this.lblMeta.AutoSize = true;
-            this.lblMeta.Location = new System.Drawing.Point(20, 35);
+            this.lblMeta.Location = new System.Drawing.Point(27, 58);
             this.lblMeta.Name = "lblMeta";
             this.lblMeta.Size = new System.Drawing.Size(292, 13);
             this.lblMeta.TabIndex = 1;
@@ -61,7 +61,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblClient
             // 
             this.lblClient.AutoSize = true;
-            this.lblClient.Location = new System.Drawing.Point(620, 15);
+            this.lblClient.Location = new System.Drawing.Point(679, 24);
             this.lblClient.Name = "lblClient";
             this.lblClient.Size = new System.Drawing.Size(33, 13);
             this.lblClient.TabIndex = 2;
@@ -71,16 +71,16 @@ namespace AppSenAgriculture.Views.Commande
             // 
             this.cmbClient.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbClient.FormattingEnabled = true;
-            this.cmbClient.Location = new System.Drawing.Point(620, 30);
+            this.cmbClient.Location = new System.Drawing.Point(683, 48);
             this.cmbClient.Name = "cmbClient";
-            this.cmbClient.Size = new System.Drawing.Size(338, 21);
+            this.cmbClient.Size = new System.Drawing.Size(275, 21);
             this.cmbClient.TabIndex = 3;
             this.cmbClient.SelectedIndexChanged += new System.EventHandler(this.cmbClient_SelectedIndexChanged);
             // 
             // lblProduit
             // 
             this.lblProduit.AutoSize = true;
-            this.lblProduit.Location = new System.Drawing.Point(20, 65);
+            this.lblProduit.Location = new System.Drawing.Point(27, 110);
             this.lblProduit.Name = "lblProduit";
             this.lblProduit.Size = new System.Drawing.Size(41, 13);
             this.lblProduit.TabIndex = 4;
@@ -90,7 +90,7 @@ namespace AppSenAgriculture.Views.Commande
             // 
             this.cmbProduit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProduit.FormattingEnabled = true;
-            this.cmbProduit.Location = new System.Drawing.Point(20, 90);
+            this.cmbProduit.Location = new System.Drawing.Point(31, 134);
             this.cmbProduit.Name = "cmbProduit";
             this.cmbProduit.Size = new System.Drawing.Size(300, 21);
             this.cmbProduit.TabIndex = 5;
@@ -98,7 +98,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblQuantite
             // 
             this.lblQuantite.AutoSize = true;
-            this.lblQuantite.Location = new System.Drawing.Point(340, 65);
+            this.lblQuantite.Location = new System.Drawing.Point(355, 110);
             this.lblQuantite.Name = "lblQuantite";
             this.lblQuantite.Size = new System.Drawing.Size(47, 13);
             this.lblQuantite.TabIndex = 6;
@@ -106,7 +106,7 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // txtQuantite
             // 
-            this.txtQuantite.Location = new System.Drawing.Point(340, 90);
+            this.txtQuantite.Location = new System.Drawing.Point(359, 134);
             this.txtQuantite.Name = "txtQuantite";
             this.txtQuantite.Size = new System.Drawing.Size(120, 20);
             this.txtQuantite.TabIndex = 7;
@@ -114,7 +114,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblPrixUnitaire
             // 
             this.lblPrixUnitaire.AutoSize = true;
-            this.lblPrixUnitaire.Location = new System.Drawing.Point(480, 65);
+            this.lblPrixUnitaire.Location = new System.Drawing.Point(503, 110);
             this.lblPrixUnitaire.Name = "lblPrixUnitaire";
             this.lblPrixUnitaire.Size = new System.Drawing.Size(59, 13);
             this.lblPrixUnitaire.TabIndex = 8;
@@ -122,16 +122,16 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // txtPrixUnitaire
             // 
-            this.txtPrixUnitaire.Location = new System.Drawing.Point(480, 90);
+            this.txtPrixUnitaire.Location = new System.Drawing.Point(507, 134);
             this.txtPrixUnitaire.Name = "txtPrixUnitaire";
             this.txtPrixUnitaire.Size = new System.Drawing.Size(120, 20);
             this.txtPrixUnitaire.TabIndex = 9;
             // 
             // btnAjouterDetail
             // 
-            this.btnAjouterDetail.Location = new System.Drawing.Point(620, 87);
+            this.btnAjouterDetail.Location = new System.Drawing.Point(651, 129);
             this.btnAjouterDetail.Name = "btnAjouterDetail";
-            this.btnAjouterDetail.Size = new System.Drawing.Size(80, 23);
+            this.btnAjouterDetail.Size = new System.Drawing.Size(120, 34);
             this.btnAjouterDetail.TabIndex = 10;
             this.btnAjouterDetail.Text = "Ajouter";
             this.btnAjouterDetail.UseVisualStyleBackColor = true;
@@ -139,9 +139,9 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // btnModifierDetail
             // 
-            this.btnModifierDetail.Location = new System.Drawing.Point(706, 87);
+            this.btnModifierDetail.Location = new System.Drawing.Point(777, 129);
             this.btnModifierDetail.Name = "btnModifierDetail";
-            this.btnModifierDetail.Size = new System.Drawing.Size(80, 23);
+            this.btnModifierDetail.Size = new System.Drawing.Size(120, 34);
             this.btnModifierDetail.TabIndex = 11;
             this.btnModifierDetail.Text = "Modifier";
             this.btnModifierDetail.UseVisualStyleBackColor = true;
@@ -149,9 +149,9 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // btnSupprimerDetail
             // 
-            this.btnSupprimerDetail.Location = new System.Drawing.Point(792, 87);
+            this.btnSupprimerDetail.Location = new System.Drawing.Point(903, 129);
             this.btnSupprimerDetail.Name = "btnSupprimerDetail";
-            this.btnSupprimerDetail.Size = new System.Drawing.Size(90, 23);
+            this.btnSupprimerDetail.Size = new System.Drawing.Size(120, 34);
             this.btnSupprimerDetail.TabIndex = 12;
             this.btnSupprimerDetail.Text = "Supprimer";
             this.btnSupprimerDetail.UseVisualStyleBackColor = true;
@@ -159,9 +159,9 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // btnChargerDetail
             // 
-            this.btnChargerDetail.Location = new System.Drawing.Point(888, 87);
+            this.btnChargerDetail.Location = new System.Drawing.Point(1029, 129);
             this.btnChargerDetail.Name = "btnChargerDetail";
-            this.btnChargerDetail.Size = new System.Drawing.Size(70, 23);
+            this.btnChargerDetail.Size = new System.Drawing.Size(120, 34);
             this.btnChargerDetail.TabIndex = 13;
             this.btnChargerDetail.Text = "Charger";
             this.btnChargerDetail.UseVisualStyleBackColor = true;
@@ -169,9 +169,9 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // btnEnregistrer
             // 
-            this.btnEnregistrer.Location = new System.Drawing.Point(20, 128);
+            this.btnEnregistrer.Location = new System.Drawing.Point(31, 188);
             this.btnEnregistrer.Name = "btnEnregistrer";
-            this.btnEnregistrer.Size = new System.Drawing.Size(120, 24);
+            this.btnEnregistrer.Size = new System.Drawing.Size(150, 38);
             this.btnEnregistrer.TabIndex = 14;
             this.btnEnregistrer.Text = "Enregistrer";
             this.btnEnregistrer.UseVisualStyleBackColor = true;
@@ -179,9 +179,9 @@ namespace AppSenAgriculture.Views.Commande
             // 
             // btnValider
             // 
-            this.btnValider.Location = new System.Drawing.Point(146, 128);
+            this.btnValider.Location = new System.Drawing.Point(187, 188);
             this.btnValider.Name = "btnValider";
-            this.btnValider.Size = new System.Drawing.Size(120, 24);
+            this.btnValider.Size = new System.Drawing.Size(150, 38);
             this.btnValider.TabIndex = 15;
             this.btnValider.Text = "Valider";
             this.btnValider.UseVisualStyleBackColor = true;
@@ -190,7 +190,7 @@ namespace AppSenAgriculture.Views.Commande
             // lblTotalCommande
             // 
             this.lblTotalCommande.AutoSize = true;
-            this.lblTotalCommande.Location = new System.Drawing.Point(760, 132);
+            this.lblTotalCommande.Location = new System.Drawing.Point(965, 197);
             this.lblTotalCommande.Name = "lblTotalCommande";
             this.lblTotalCommande.Size = new System.Drawing.Size(49, 13);
             this.lblTotalCommande.TabIndex = 16;
@@ -200,19 +200,20 @@ namespace AppSenAgriculture.Views.Commande
             // 
             this.dgDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgDetails.Location = new System.Drawing.Point(20, 165);
+            this.dgDetails.Location = new System.Drawing.Point(31, 247);
             this.dgDetails.MultiSelect = false;
             this.dgDetails.Name = "dgDetails";
             this.dgDetails.ReadOnly = true;
             this.dgDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgDetails.Size = new System.Drawing.Size(938, 375);
+            this.dgDetails.Size = new System.Drawing.Size(1118, 403);
             this.dgDetails.TabIndex = 17;
             // 
             // frmDetailsCommande
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(980, 600);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(1180, 680);
             this.Controls.Add(this.dgDetails);
             this.Controls.Add(this.lblTotalCommande);
             this.Controls.Add(this.btnValider);
@@ -231,6 +232,7 @@ namespace AppSenAgriculture.Views.Commande
             this.Controls.Add(this.lblClient);
             this.Controls.Add(this.lblMeta);
             this.Controls.Add(this.lblHeader);
+            this.ControlBox = false;
             this.Name = "frmDetailsCommande";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Details commande";
