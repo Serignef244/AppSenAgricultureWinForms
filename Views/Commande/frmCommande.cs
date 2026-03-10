@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -14,6 +15,70 @@ namespace AppSenAgriculture.Views.Commande
         public frmCommande()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            StyleInputs(this);
+            AppTheme.StyleButton(btnNouvelleCommande, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnSupprimerCommande, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnDetailsCommande, AppTheme.Ochre, Color.White);
+            AppTheme.StyleGrid(dgCommandes);
+            dgCommandes.CellFormatting += dgCommandes_CellFormatting;
+        }
+
+        private void StyleInputs(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                ComboBox comboBox = control as ComboBox;
+                Label label = control as Label;
+                DateTimePicker datePicker = control as DateTimePicker;
+
+                if (textBox != null)
+                {
+                    AppTheme.StyleInput(textBox);
+                }
+                else if (comboBox != null)
+                {
+                    AppTheme.StyleComboBox(comboBox);
+                }
+                else if (label != null)
+                {
+                    AppTheme.StyleLabel(label);
+                }
+                else if (datePicker != null)
+                {
+                    datePicker.Font = AppTheme.UiFont(11F);
+                    datePicker.CalendarMonthBackground = Color.White;
+                }
+            }
+        }
+
+        private void dgCommandes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgCommandes.Columns[e.ColumnIndex].Name != "Statut" || e.Value == null)
+            {
+                return;
+            }
+
+            string statut = e.Value.ToString();
+            if (string.Equals(statut, "Validee", StringComparison.Ordinal))
+            {
+                e.CellStyle.BackColor = AppTheme.FreshGreen;
+                e.CellStyle.ForeColor = Color.White;
+            }
+            else
+            {
+                e.CellStyle.BackColor = AppTheme.BaobabOrange;
+                e.CellStyle.ForeColor = Color.White;
+            }
+
+            e.CellStyle.SelectionBackColor = e.CellStyle.BackColor;
+            e.CellStyle.SelectionForeColor = Color.White;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -110,6 +175,11 @@ namespace AppSenAgriculture.Views.Commande
                         .ToList())
                 })
                 .ToList();
+
+            if (dgCommandes.Columns.Contains("Total"))
+            {
+                dgCommandes.Columns["Total"].DefaultCellStyle.Format = "N2";
+            }
         }
 
         private bool SelectionCommandeValide()

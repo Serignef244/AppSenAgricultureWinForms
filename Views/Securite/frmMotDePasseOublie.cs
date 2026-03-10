@@ -2,6 +2,7 @@ using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
 using AppSenAgriculture.Services;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,6 +13,19 @@ namespace AppSenAgriculture.Views.Securite
         public frmMotDePasseOublie()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            label1.Font = AppTheme.TitleFont(18F);
+            label1.ForeColor = AppTheme.Anthracite;
+            label2.Font = AppTheme.UiFont(10.5F);
+            label2.ForeColor = AppTheme.MutedText;
+            AppTheme.StyleInput(txtEmail);
+            AppTheme.StyleButton(btnEnvoyer, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnAnnuler, Color.White, AppTheme.Anthracite);
         }
 
         private void btnEnvoyer_Click(object sender, EventArgs e)

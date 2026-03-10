@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ namespace AppSenAgriculture.Views.Commande
         public frmDetailsCommande()
         {
             InitializeComponent();
+            ApplyVisualStyle();
         }
 
         public frmDetailsCommande(int idCommande, string numeroCommande)
@@ -41,6 +43,34 @@ namespace AppSenAgriculture.Views.Commande
             this.idCommande = idCommande;
             this.numeroCommande = numeroCommande;
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            lblHeader.Font = AppTheme.TitleFont(18F);
+            lblHeader.ForeColor = AppTheme.Anthracite;
+            lblMeta.Font = AppTheme.UiFont(10.5F);
+            lblMeta.ForeColor = AppTheme.MutedText;
+            lblTotalCommande.Font = AppTheme.UiFont(12F, FontStyle.Bold);
+            lblTotalCommande.ForeColor = AppTheme.SavannaGreen;
+
+            AppTheme.StyleLabel(lblClient);
+            AppTheme.StyleLabel(lblProduit);
+            AppTheme.StyleLabel(lblQuantite);
+            AppTheme.StyleLabel(lblPrixUnitaire);
+            AppTheme.StyleComboBox(cmbClient);
+            AppTheme.StyleComboBox(cmbProduit);
+            AppTheme.StyleInput(txtQuantite);
+            AppTheme.StyleInput(txtPrixUnitaire);
+            AppTheme.StyleButton(btnAjouterDetail, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnModifierDetail, AppTheme.Ochre, Color.White);
+            AppTheme.StyleButton(btnSupprimerDetail, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnChargerDetail, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleButton(btnEnregistrer, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleButton(btnValider, AppTheme.BaobabOrange, Color.White);
+            AppTheme.StyleGrid(dgDetails);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -177,6 +207,16 @@ namespace AppSenAgriculture.Views.Commande
             if (dgDetails.Columns.Contains("IdProduit"))
             {
                 dgDetails.Columns["IdProduit"].Visible = false;
+            }
+
+            if (dgDetails.Columns.Contains("PrixUnitaire"))
+            {
+                dgDetails.Columns["PrixUnitaire"].DefaultCellStyle.Format = "N2";
+            }
+
+            if (dgDetails.Columns.Contains("Montant"))
+            {
+                dgDetails.Columns["Montant"].DefaultCellStyle.Format = "N2";
             }
 
             double total = db.DetailsCommandes

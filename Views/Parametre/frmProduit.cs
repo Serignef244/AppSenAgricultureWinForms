@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -13,6 +14,52 @@ namespace AppSenAgriculture.Views.Parametre
         public frmProduit()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            gbRecherche.BackColor = Color.White;
+            gbRecherche.ForeColor = AppTheme.SavannaGreen;
+            gbRecherche.Font = AppTheme.UiFont(12F, FontStyle.Bold);
+
+            StyleInputs(this);
+            AppTheme.StyleButton(btnAjouter, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnModifier, AppTheme.Ochre, Color.White);
+            AppTheme.StyleButton(btnSupprimer, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnSelection, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleButton(btnRechercher, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnReinitialiserRecherche, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleGrid(dgProduits);
+        }
+
+        private void StyleInputs(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                ComboBox comboBox = control as ComboBox;
+                Label label = control as Label;
+
+                if (textBox != null)
+                {
+                    AppTheme.StyleInput(textBox);
+                }
+                else if (comboBox != null)
+                {
+                    AppTheme.StyleComboBox(comboBox);
+                }
+                else if (label != null)
+                {
+                    AppTheme.StyleLabel(label);
+                }
+
+                if (control.HasChildren)
+                {
+                    StyleInputs(control);
+                }
+            }
         }
 
         private void frmProduit_Load(object sender, EventArgs e)
@@ -87,6 +134,16 @@ namespace AppSenAgriculture.Views.Parametre
             if (dgProduits.Columns.Contains("IdUniteMesure"))
             {
                 dgProduits.Columns["IdUniteMesure"].Visible = false;
+            }
+
+            if (dgProduits.Columns.Contains("PrixUnitaireMin"))
+            {
+                dgProduits.Columns["PrixUnitaireMin"].DefaultCellStyle.Format = "N2";
+            }
+
+            if (dgProduits.Columns.Contains("PrixUnitaireMax"))
+            {
+                dgProduits.Columns["PrixUnitaireMax"].DefaultCellStyle.Format = "N2";
             }
         }
 

@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -14,6 +15,36 @@ namespace AppSenAgriculture.Views.Stock
         public frmStock()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+
+            foreach (Control control in Controls)
+            {
+                TextBox textBox = control as TextBox;
+                ComboBox comboBox = control as ComboBox;
+                Label label = control as Label;
+
+                if (textBox != null)
+                {
+                    AppTheme.StyleInput(textBox);
+                }
+                else if (comboBox != null)
+                {
+                    AppTheme.StyleComboBox(comboBox);
+                }
+                else if (label != null)
+                {
+                    AppTheme.StyleLabel(label);
+                }
+            }
+
+            AppTheme.StyleButton(btnApprovisionner, AppTheme.SavannaGreen, Color.White);
+
+            AppTheme.StyleGrid(dgStock);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -81,6 +112,11 @@ namespace AppSenAgriculture.Views.Stock
             {
                 dgStock.Columns["IdProduit"].Visible = false;
             }
+
+            if (dgStock.Columns.Contains("PrixUnitaire"))
+            {
+                dgStock.Columns["PrixUnitaire"].DefaultCellStyle.Format = "N2";
+            }
         }
 
         private dynamic ProduitSelectionne()
@@ -128,6 +164,9 @@ namespace AppSenAgriculture.Views.Stock
                 .Select(s => (int?)s.QuanteStock)
                 .FirstOrDefault() ?? 0;
             lblQuantiteDisponible.Text = "Stock disponible: " + disponible;
+            lblQuantiteDisponible.ForeColor = disponible <= 5
+                ? AppTheme.BaobabOrange
+                : AppTheme.FreshGreen;
         }
 
         private bool LireSaisie(out int quantite)

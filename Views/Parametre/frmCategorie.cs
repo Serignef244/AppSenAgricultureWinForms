@@ -1,13 +1,8 @@
 ﻿using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AppSenAgriculture.Views.Parametre
@@ -20,7 +15,27 @@ namespace AppSenAgriculture.Views.Parametre
         public frmCategorie()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
 
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            AppTheme.StyleInput(txtLibelle);
+            AppTheme.StyleInput(txtDescription);
+            AppTheme.StyleInput(txtRecherche);
+            AppTheme.StyleLabel(label1);
+            AppTheme.StyleLabel(label2);
+            AppTheme.StyleLabel(lblRecherche);
+            AppTheme.StyleButton(btnAjouter, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnModifier, AppTheme.Ochre, Color.White);
+            AppTheme.StyleButton(btnSupprimer, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnSelection, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleGrid(dgCategorie);
+
+            txtDescription.Height = 150;
+            btnSelection.Width = 170;
+            btnSelection.Height = 40;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -86,6 +101,11 @@ namespace AppSenAgriculture.Views.Parametre
                     c.DescriptionCategorie
                 })
                 .ToList();
+
+            if (dgCategorie.Columns.Contains("IdCategorie"))
+            {
+                dgCategorie.Columns["IdCategorie"].Visible = false;
+            }
         }
 
         private bool SelectionValide()

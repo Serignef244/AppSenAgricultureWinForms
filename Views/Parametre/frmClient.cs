@@ -3,6 +3,7 @@ using AppSenAgriculture.Models;
 using AppSenAgriculture.Security;
 using AppSenAgriculture.Services;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -15,6 +16,37 @@ namespace AppSenAgriculture.Views.Parametre
         public frmClient()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+            StyleInputs(this);
+            AppTheme.StyleButton(btnAjouter, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnModifier, AppTheme.Ochre, Color.White);
+            AppTheme.StyleButton(btnSupprimer, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnSelectionner, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleButton(btnReinitialiser, Color.White, AppTheme.Anthracite);
+            AppTheme.StyleGrid(dgClients);
+        }
+
+        private void StyleInputs(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                Label label = control as Label;
+
+                if (textBox != null)
+                {
+                    AppTheme.StyleInput(textBox);
+                }
+                else if (label != null)
+                {
+                    AppTheme.StyleLabel(label);
+                }
+            }
         }
 
         protected override void OnLoad(EventArgs e)

@@ -1,6 +1,7 @@
 using AppSenAgriculture;
 using AppSenAgriculture.Models;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -13,6 +14,60 @@ namespace AppSenAgriculture.Views.Parametre
         public frmLieu()
         {
             InitializeComponent();
+            ApplyVisualStyle();
+        }
+
+        private void ApplyVisualStyle()
+        {
+            AppTheme.ApplyFormTheme(this);
+
+            gbRegions.BackColor = Color.White;
+            gbRegions.ForeColor = AppTheme.SavannaGreen;
+            gbRegions.Font = AppTheme.UiFont(12F, FontStyle.Bold);
+
+            gbDepartements.BackColor = Color.White;
+            gbDepartements.ForeColor = AppTheme.SavannaGreen;
+            gbDepartements.Font = AppTheme.UiFont(12F, FontStyle.Bold);
+
+            foreach (Control control in Controls)
+            {
+                ApplyControlTheme(control);
+            }
+
+            AppTheme.StyleButton(btnAjouterRegion, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnSupprimerRegion, AppTheme.Danger, Color.White);
+            AppTheme.StyleButton(btnAjouterDepartement, AppTheme.SavannaGreen, Color.White);
+            AppTheme.StyleButton(btnSupprimerDepartement, AppTheme.Danger, Color.White);
+            AppTheme.StyleGrid(dgRegions);
+            AppTheme.StyleGrid(dgDepartements);
+        }
+
+        private void ApplyControlTheme(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                TextBox textBox = control as TextBox;
+                ComboBox comboBox = control as ComboBox;
+                Label label = control as Label;
+
+                if (textBox != null)
+                {
+                    AppTheme.StyleInput(textBox);
+                }
+                else if (comboBox != null)
+                {
+                    AppTheme.StyleComboBox(comboBox);
+                }
+                else if (label != null)
+                {
+                    AppTheme.StyleLabel(label);
+                }
+
+                if (control.HasChildren)
+                {
+                    ApplyControlTheme(control);
+                }
+            }
         }
 
         private void frmLieu_Load(object sender, EventArgs e)
@@ -57,6 +112,11 @@ namespace AppSenAgriculture.Views.Parametre
             cmbRegionDepartement.DataSource = db.Regions.OrderBy(r => r.NomRegion).ToList();
             cmbRegionDepartement.DisplayMember = "NomRegion";
             cmbRegionDepartement.ValueMember = "IdRegion";
+
+            if (dgRegions.Columns.Contains("IdRegion"))
+            {
+                dgRegions.Columns["IdRegion"].Visible = false;
+            }
         }
 
         private void ChargerDepartements()
@@ -89,7 +149,7 @@ namespace AppSenAgriculture.Views.Parametre
                     return;
                 }
 
-                db.Regions.Add(new Region { NomRegion = txtNomRegion.Text.Trim() });
+                db.Regions.Add(new AppSenAgriculture.Models.Region { NomRegion = txtNomRegion.Text.Trim() });
                 db.SaveChanges();
                 txtNomRegion.Clear();
                 ChargerRegions();
