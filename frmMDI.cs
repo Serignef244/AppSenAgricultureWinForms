@@ -5,6 +5,7 @@ using AppSenAgriculture.Views.Stock;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AppSenAgriculture

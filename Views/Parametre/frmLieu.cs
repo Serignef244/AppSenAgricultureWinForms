@@ -149,7 +149,7 @@ namespace AppSenAgriculture.Views.Parametre
                     return;
                 }
 
-                db.Regions.Add(new Region { NomRegion = txtNomRegion.Text.Trim() });
+                db.Regions.Add(new AppSenAgriculture.Models.Region { NomRegion = txtNomRegion.Text.Trim() });
                 db.SaveChanges();
                 txtNomRegion.Clear();
                 ChargerRegions();
