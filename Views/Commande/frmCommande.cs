@@ -28,6 +28,8 @@ namespace AppSenAgriculture.Views.Commande
             StyleActionButton(btnNouvelleCommande, Color.FromArgb(45, 80, 22), Color.White);
             StyleActionButton(btnSupprimerCommande, Color.FromArgb(140, 54, 32), Color.White);
             StyleActionButton(btnDetailsCommande, Color.FromArgb(196, 137, 42), Color.White);
+            StyleGrid(dgCommandes);
+            dgCommandes.CellFormatting += dgCommandes_CellFormatting;
         }
 
         private void StyleInputs(Control parent)
@@ -73,6 +75,48 @@ namespace AppSenAgriculture.Views.Commande
             button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
             button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
             button.Height = 38;
+        }
+
+        private void StyleGrid(DataGridView grid)
+        {
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.None;
+            grid.EnableHeadersVisualStyles = false;
+            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 80, 22);
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
+            grid.DefaultCellStyle.Font = new Font("JetBrains Mono", 10F);
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 137, 42);
+            grid.DefaultCellStyle.SelectionForeColor = Color.White;
+            grid.DefaultCellStyle.BackColor = Color.White;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 240, 232);
+            grid.RowHeadersVisible = false;
+            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            grid.GridColor = Color.FromArgb(230, 220, 204);
+        }
+
+        private void dgCommandes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgCommandes.Columns[e.ColumnIndex].Name != "Statut" || e.Value == null)
+            {
+                return;
+            }
+
+            string statut = e.Value.ToString();
+            if (string.Equals(statut, "Validee", StringComparison.Ordinal))
+            {
+                e.CellStyle.BackColor = Color.FromArgb(90, 138, 46);
+                e.CellStyle.ForeColor = Color.White;
+            }
+            else
+            {
+                e.CellStyle.BackColor = Color.FromArgb(232, 101, 26);
+                e.CellStyle.ForeColor = Color.White;
+            }
+
+            e.CellStyle.SelectionBackColor = e.CellStyle.BackColor;
+            e.CellStyle.SelectionForeColor = Color.White;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -169,6 +213,11 @@ namespace AppSenAgriculture.Views.Commande
                         .ToList())
                 })
                 .ToList();
+
+            if (dgCommandes.Columns.Contains("Total"))
+            {
+                dgCommandes.Columns["Total"].DefaultCellStyle.Format = "N2";
+            }
         }
 
         private bool SelectionCommandeValide()

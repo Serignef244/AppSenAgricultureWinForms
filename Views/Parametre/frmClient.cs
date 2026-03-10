@@ -30,6 +30,7 @@ namespace AppSenAgriculture.Views.Parametre
             StyleActionButton(btnSupprimer, Color.FromArgb(140, 54, 32), Color.White);
             StyleActionButton(btnSelectionner, Color.White, Color.FromArgb(44, 24, 16));
             StyleActionButton(btnReinitialiser, Color.White, Color.FromArgb(44, 24, 16));
+            StyleGrid(dgClients);
         }
 
         private void StyleInputs(Control parent)
@@ -62,6 +63,25 @@ namespace AppSenAgriculture.Views.Parametre
             button.FlatAppearance.BorderSize = backColor == Color.White ? 1 : 0;
             button.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
             button.Height = 38;
+        }
+
+        private void StyleGrid(DataGridView grid)
+        {
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.None;
+            grid.EnableHeadersVisualStyles = false;
+            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 80, 22);
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Source Sans 3", 11F, FontStyle.Bold);
+            grid.DefaultCellStyle.Font = new Font("JetBrains Mono", 10F);
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 137, 42);
+            grid.DefaultCellStyle.SelectionForeColor = Color.White;
+            grid.DefaultCellStyle.BackColor = Color.White;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 240, 232);
+            grid.RowHeadersVisible = false;
+            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            grid.GridColor = Color.FromArgb(230, 220, 204);
         }
 
         protected override void OnLoad(EventArgs e)
